@@ -1,0 +1,75 @@
+doctype html
+html
+  head
+    title 上传图片
+    meta(charset='UTF-8')
+    link(rel="stylesheet", type="text/css", href="/css/metro.min.css")
+    link(rel="stylesheet", type="text/css", href="/css/metro-colors.min.css")
+    link(rel="stylesheet", type="text/css", href="/css/metro-icons.min.css")
+    link(rel="stylesheet", type="text/css", href="/css/metro-responsive.min.css")
+    link(rel="stylesheet", type="text/css", href="/css/metro-rtl.min.css")
+    link(rel="stylesheet", type="text/css", href="/css/metro-schemes.min.css")
+    script(src="/js/jquery-3.2.1.js")
+    script(src="/js/metro.js")
+    style.
+      .upload-form {
+        width: 25rem;
+        height: 27.25rem;
+        position: fixed;
+        top: 40%;
+        margin-top: -9.375rem;
+        left: 50%;
+        margin-left: -12.5rem;
+        background-color: #ffffff;
+        opacity: 0;
+        -webkit-transform: scale(.8);
+        transform: scale(.8);
+      }
+  body.bg-darkerGray
+    .upload-form.padding20.block-shadow(style="opacity: 1;transform: scale(1);transition: 0.5s;")
+      form
+        h1.text-light 上传图片
+        hr.thin
+        br
+        .input-control.textarea.full-size(data-role="input", data-text-auto-resize="true", data-text-max-height="200")
+          label(for="picture_desc") 图片描述
+          textarea(name="picture_desc", id="picture_desc", style="margin-top: 0.25rem;")
+        br
+        br
+        span 请选择图片分类
+        br
+        label.input-control.radio.small-check(data-role="input")
+          input(type="radio", name="picture_category")
+          span.check
+          span.caption 动物
+        label.input-control.radio.small-check(data-role="input")
+          input(type="radio", name="picture_category")
+          span.check
+          span.caption 风景
+        label.input-control.radio.small-check(data-role="input")
+          input(type="radio", name="picture_category")
+          span.check
+          span.caption 人
+        label.input-control.radio.small-check(data-role="input")
+          input(type="radio", name="picture_category")
+          span.check
+          span.caption 建筑
+        label.input-control.radio.small-check(data-role="input")
+          input(type="radio", name="picture_category")
+          span.check
+          span.caption 食物
+        label.input-control.radio.small-check(data-role="input")
+          input(type="radio", name="picture_category")
+          span.check
+          span.caption 科技
+        br
+        br
+        .input-control.file.full-size(data-role="input")
+          label(for="picture_file") 请选择一张图片上传
+          input(type="file", style="z-index: 0;", tabindex="-1", id="picture_file", name="picture_file")
+          button.button(type="button")
+            span.mif-image
+        br
+        br
+        .form-actions
+          button.button.primary(type="submit") 上传
