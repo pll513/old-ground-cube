@@ -1,0 +1,28 @@
+{
+  "name": "old-ground-cube",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "body-parser": "~1.16.0",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.0",
+    "express": "~4.14.1",
+    "jade": "~1.11.0",
+    "morgan": "~1.7.0",
+    "serve-favicon": "~2.3.2",
+    "metro-dist": "~3.0.17",
+    "mongodb": "^2.2.26",
+    "assert": "^1.4.1"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-less": "^3.3.0",
+    "gulp-csso": "^3.0.0",
+    "gulp-concat-css": "^2.3.0",
+    "gulp-watch": "^4.3.11",
+    "gulp-plumber": "^1.1.0"
+  }
+}
