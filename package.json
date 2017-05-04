@@ -15,7 +15,10 @@
     "serve-favicon": "~2.3.2",
     "metro-dist": "~3.0.17",
     "mongodb": "^2.2.26",
-    "assert": "^1.4.1"
+    "assert": "^1.4.1",
+    "jsonwebtoken": "^7.4.0",
+    "connect-multiparty": "^2.0.0",
+    "uuid": "^3.0.1"
   },
   "devDependencies": {
     "gulp": "^3.9.1",

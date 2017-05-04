@@ -3,10 +3,25 @@ var router = express.Router();
 var MongoClient = require('mongodb').MongoClient;
 var url = require('../config').mongodb.url;
 var assert = require('assert');
+var jwt = require('jsonwebtoken');
+var jwtAuth = require('../jwtauth');
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', function (req, res, next) {
   res.render('index');
+});
+
+router.get('/test', function (req, res, next) {
+  res.render('topic/publish');
+});
+
+router.post('/test', jwtAuth, function (req, res, next) {
+  console.log('this is /test');
+  console.log(req.dataOne);
+  console.log(req.dataTwo);
+  res.json({
+    success: true
+  });
 });
 
 router.get('/login', function (req, res, next) {
@@ -26,17 +41,37 @@ router.post('/login', function (req, res, next) {
   
   MongoClient.connect(url, function (err, db) {
     assert.equal(null, err);
-    db.collection('user').findOne({name: userName, password: userPassword}, function (err, result) {
+    db.collection('user').findOne({name: userName}, function (err, user) {
       assert.equal(null, err);
-      console.log(result);
-      if (result) {
-        console.log('hahahah');
-        // req.session.userId = result._id;
-        res.send({status: 0, msg: '注册成功'});
+      console.log(user);
+      if (!user) {
+        
+        res.json({
+          success: false,
+          message: '账号不存在'
+        });
+        
       } else {
-        res.send({status: 1, msg: '账号或密码错误'});
+        
+        if (user.password !== userPassword) {
+          res.json({
+            success: false,
+            message: '密码错误'
+          });
+        } else {
+          var token = jwt.sign(user, 'secret', {
+            expiresIn: 24 * 60 * 60 // expires in 24 hours
+          });
+          res.json({
+            success: true,
+            message: 'Enjoy your token!',
+            token: token
+          });
+        }
+        
       }
-    })
+      
+    });
   });
   
 });
@@ -68,6 +103,10 @@ router.post('/register', function (req, res, next) {
   } else {
     res.send({status: 1});
   }
+});
+
+router.get('/me', function (req, res, next) {
+  res.render('me');
 });
 
 module.exports = router;

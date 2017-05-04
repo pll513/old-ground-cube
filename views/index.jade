@@ -1,94 +1,258 @@
 doctype html
 html
-  head
+  head(lang="en")
     title 老地方
     meta(charset='UTF-8')
+    meta(http-equiv="X-UA-Compatible", content="IE=edge")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
     link(rel="stylesheet", type="text/css", href="/css/metro.min.css")
     link(rel="stylesheet", type="text/css", href="/css/metro-colors.min.css")
     link(rel="stylesheet", type="text/css", href="/css/metro-icons.min.css")
     link(rel="stylesheet", type="text/css", href="/css/metro-responsive.min.css")
     link(rel="stylesheet", type="text/css", href="/css/metro-rtl.min.css")
     link(rel="stylesheet", type="text/css", href="/css/metro-schemes.min.css")
+    style.
+      .tile-area-controls {
+        position: fixed;
+        right: 40px;
+        top: 40px;
+      }
+
+      .tile-group {
+        left: 100px;
+      }
+
+      .tile, .tile-small, .tile-sqaure, .tile-wide, .tile-large, .tile-big, .tile-super {
+        opacity: 0;
+        -webkit-transform: scale(.8);
+        transform: scale(.8);
+      }
+
+      #charmSettings .button {
+        margin: 5px;
+      }
+
+      .schemeButtons {
+        /*width: 300px;*/
+      }
+
+      @media screen and (max-width: 640px) {
+        .tile-area {
+          overflow-y: scroll;
+        }
+
+        .tile-area-controls {
+          display: none;
+        }
+      }
+
+      @media screen and (max-width: 320px) {
+        .tile-area {
+          overflow-y: scroll;
+        }
+
+        .tile-area-controls {
+          display: none;
+        }
+
+      }
     script(src="/js/jquery-3.2.1.js")
     script(src="/js/metro.js")
-  body
-    .tile-area.fg-white.tile-area-scheme-dark(style="height: 100%; max-height: 100% !important; width: 1920px;")
-      h1.tile-area-title 老地方
-      .tile-area-controls
-        form
-          .input-control
-            input.text
-          .input-control
-            input(type="submit", value="搜索").no-margin
-      .tile-group.double(style="left: 0px;")
-        span.tile-group-title 图片
-        .tile-container
-          .tile-wide(data-role="tile", data-effect="slideLeft")
-            .tile-content
-              a.live-slide(href="#")
-                .image-container.image-format-fill(style="width: 100%; height: 100%; background-image: url('/images/test/1.jpg'); background-size: cover; background-repeat: no-repeat; border-radius: 0px;")
-              a.live-slide(href="#")
-                .image-container.image-format-fill(style="width: 100%; height: 100%; background-image: url('/images/test/2.jpg'); background-size: cover; background-repeat: no-repeat; border-radius: 0px;")
-              a.live-slide(href="#")
-                .image-container.image-format-fill(style="width: 100%; height: 100%; background-image: url('/images/test/3.jpg'); background-size: cover; background-repeat: no-repeat; border-radius: 0px;")
-              a.live-slide(href="#")
-                .image-container.image-format-fill(style="width: 100%; height: 100%; background-image: url('/images/test/4.jpg'); background-size: cover; background-repeat: no-repeat; border-radius: 0px;")
-              .tile-label 画廊
-          a.tile.bg-indigo.fg-white(href="#", data-role="tile", style="opacity: 1; transform: scale(1); transition: 0.3s;")
-            .tile-content.iconic
-              span.icon.mif-file-upload
-            .tile-label 发布图片
-      .tile-group.double(style="left: 0px;")
-        span.tile-group-title 话题
-        .tile-container
-          .tile-wide(data-role="tile", data-effect="slideLeft")
-            .tile-content
-              a.live-slide(href="#")
-                .image-container.image-format-fill(style="width: 100%; height: 100%; background-image: url('/images/test/1.jpg'); background-size: cover; background-repeat: no-repeat; border-radius: 0px;")
-              a.live-slide(href="#")
-                .image-container.image-format-fill(style="width: 100%; height: 100%; background-image: url('/images/test/2.jpg'); background-size: cover; background-repeat: no-repeat; border-radius: 0px;")
-              a.live-slide(href="#")
-                .image-container.image-format-fill(style="width: 100%; height: 100%; background-image: url('/images/test/3.jpg'); background-size: cover; background-repeat: no-repeat; border-radius: 0px;")
-              a.live-slide(href="#")
-                .image-container.image-format-fill(style="width: 100%; height: 100%; background-image: url('/images/test/4.jpg'); background-size: cover; background-repeat: no-repeat; border-radius: 0px;")
-              .tile-label 画廊
-          a.tile.bg-indigo.fg-white(href="#", data-role="tile", style="opacity: 1; transform: scale(1); transition: 0.3s;")
-            .tile-content.iconic
-              span.icon.mif-file-upload
-            .tile-label 发布话题
-      .tile-group.double(style="left: 0px;")
-        span.tile-group-title 相册
-        .tile-container
-          .tile-wide(data-role="tile", data-effect="slideLeft")
-            .tile-content
-              a.live-slide(href="#")
-                .image-container.image-format-fill(style="width: 100%; height: 100%; background-image: url('/images/test/1.jpg'); background-size: cover; background-repeat: no-repeat; border-radius: 0px;")
-              a.live-slide(href="#")
-                .image-container.image-format-fill(style="width: 100%; height: 100%; background-image: url('/images/test/2.jpg'); background-size: cover; background-repeat: no-repeat; border-radius: 0px;")
-              a.live-slide(href="#")
-                .image-container.image-format-fill(style="width: 100%; height: 100%; background-image: url('/images/test/3.jpg'); background-size: cover; background-repeat: no-repeat; border-radius: 0px;")
-              a.live-slide(href="#")
-                .image-container.image-format-fill(style="width: 100%; height: 100%; background-image: url('/images/test/4.jpg'); background-size: cover; background-repeat: no-repeat; border-radius: 0px;")
-              .tile-label 画廊
-          a.tile.bg-indigo.fg-white(href="#", data-role="tile", style="opacity: 1; transform: scale(1); transition: 0.3s;")
-            .tile-content.iconic
-              span.icon.mif-file-upload
-            .tile-label 发布话题
-      .tile-group.one(style="left: 0px;")
-        span.tile-group-title 其他
-        a.tile-small.bg-gray.fg-white(href="#", data-role="tile", style="opacity: 1; transform: scale(1); transition: 0.3s;")
-          .tile-content.iconic
-            span.icon.mif-cog
-        a.tile-small.bg-cyan.fg-white(href="#", data-role="tile", style="opacity: 1; transform: scale(1); transition: 0.3s;")
-          .tile-content.iconic
-            span.icon.mif-envelop
-        a.tile-small.bg-amber.fg-white(href="#", data-role="tile", style="opacity: 1; transform: scale(1); transition: 0.3s;")
-          .tile-content.iconic
-            span.icon.mif-star-full
-        a.tile-small.bg-green.fg-white(href="#", data-role="tile", style="opacity: 1; transform: scale(1); transition: 0.3s;")
-          .tile-content.iconic
-            span.icon.mif-user
-        a.tile-small.bg-yellow.fg-white(href="#", data-role="tile", style="opacity: 1; transform: scale(1); transition: 0.3s;")
-          .tile-content.iconic
-            span.icon.mif-users
+    script.
+      (function ($) {
+        $.StartScreen = function () {
+          var plugin = this;
+          var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+
+          plugin.init = function () {
+            setTilesAreaSize();
+            if (width > 640) addMouseWheel();
+          };
+
+          var setTilesAreaSize = function () {
+            var groups = $(".tile-group");
+            var tileAreaWidth = 80;
+            $.each(groups, function (i, t) {
+              if (width <= 640) {
+                tileAreaWidth = width;
+              } else {
+                tileAreaWidth += $(t).outerWidth() + 80;
+              }
+            });
+            $(".tile-area").css({
+              width: tileAreaWidth
+            });
+          };
+
+          var addMouseWheel = function () {
+            $("body").mousewheel(function (event, delta, deltaX, deltaY) {
+              var page = $(document);
+              var scroll_value = delta * 50;
+              page.scrollLeft(page.scrollLeft() - scroll_value);
+              return false;
+            });
+          };
+
+          plugin.init();
+        }
+      })(jQuery);
+
+      $(function () {
+        $.StartScreen();
+
+        var tiles = $(".tile, .tile-small, .tile-sqaure, .tile-wide, .tile-large, .tile-big, .tile-super");
+
+        $.each(tiles, function () {
+          var tile = $(this);
+          setTimeout(function () {
+            tile.css({
+              opacity: 1,
+              "-webkit-transform": "scale(1)",
+              "transform": "scale(1)",
+              "-webkit-transition": ".3s",
+              "transition": ".3s"
+            });
+          }, Math.floor(Math.random() * 500));
+        });
+
+        $(".tile-group").animate({
+          left: 0
+        });
+      });
+
+      function showCharms(id) {
+        var charm = $(id).data("charm");
+        if (charm.element.data("opened") === true) {
+          charm.close();
+        } else {
+          charm.open();
+        }
+      }
+
+      function setSearchPlace(el) {
+        var a = $(el);
+        var text = a.text();
+        var toggle = a.parents('label').children('.dropdown-toggle');
+
+        toggle.text(text);
+      }
+
+      $(function () {
+        var current_tile_area_scheme = localStorage.getItem('tile-area-scheme') || "tile-area-scheme-dark";
+        $(".tile-area").removeClass(function (index, css) {
+          return (css.match(/(^|\s)tile-area-scheme-\S+/g) || []).join(' ');
+        }).addClass(current_tile_area_scheme);
+
+        $(".schemeButtons .button").hover(
+                function () {
+                  var b = $(this);
+                  var scheme = "tile-area-scheme-" + b.data('scheme');
+                  $(".tile-area").removeClass(function (index, css) {
+                    return (css.match(/(^|\s)tile-area-scheme-\S+/g) || []).join(' ');
+                  }).addClass(scheme);
+                },
+                function () {
+                  $(".tile-area").removeClass(function (index, css) {
+                    return (css.match(/(^|\s)tile-area-scheme-\S+/g) || []).join(' ');
+                  }).addClass(current_tile_area_scheme);
+                }
+        );
+
+        $(".schemeButtons .button").on("click", function () {
+          var b = $(this);
+          var scheme = "tile-area-scheme-" + b.data('scheme');
+
+          $(".tile-area").removeClass(function (index, css) {
+            return (css.match(/(^|\s)tile-area-scheme-\S+/g) || []).join(' ');
+          }).addClass(scheme);
+
+          current_tile_area_scheme = scheme;
+          localStorage.setItem('tile-area-scheme', scheme);
+
+          showSettings();
+        });
+      });
+
+
+  include index.html
+  //body
+  //  .tile-area.fg-white.tile-area-scheme-dark(style="height: 100%; max-height: 100% !important; width: 1920px;")
+  //    h1.tile-area-title 老地方
+  //    .tile-area-controls
+  //      form
+  //        .input-control
+  //          input.text
+  //        .input-control
+  //          input(type="submit", value="搜索").no-margin
+  //    .tile-group.double(style="left: 0px;")
+  //      span.tile-group-title 图片
+  //      .tile-container
+  //        .tile-wide(data-role="tile", data-effect="slideLeft")
+  //          .tile-content
+  //            a.live-slide(href="#")
+  //              .image-container.image-format-fill(style="width: 100%; height: 100%; background-image: url('/images/test/1.jpg'); background-size: cover; background-repeat: no-repeat; border-radius: 0px;")
+  //            a.live-slide(href="#")
+  //              .image-container.image-format-fill(style="width: 100%; height: 100%; background-image: url('/images/test/2.jpg'); background-size: cover; background-repeat: no-repeat; border-radius: 0px;")
+  //            a.live-slide(href="#")
+  //              .image-container.image-format-fill(style="width: 100%; height: 100%; background-image: url('/images/test/3.jpg'); background-size: cover; background-repeat: no-repeat; border-radius: 0px;")
+  //            a.live-slide(href="#")
+  //              .image-container.image-format-fill(style="width: 100%; height: 100%; background-image: url('/images/test/4.jpg'); background-size: cover; background-repeat: no-repeat; border-radius: 0px;")
+  //            .tile-label 画廊
+  //        a.tile.bg-indigo.fg-white(href="#", data-role="tile", style="opacity: 1; transform: scale(1); transition: 0.3s;")
+  //          .tile-content.iconic
+  //            span.icon.mif-file-upload
+  //          .tile-label 发布图片
+  //    .tile-group.double(style="left: 0px;")
+  //      span.tile-group-title 话题
+  //      .tile-container
+  //        .tile-wide(data-role="tile", data-effect="slideLeft")
+  //          .tile-content
+  //            a.live-slide(href="#")
+  //              .image-container.image-format-fill(style="width: 100%; height: 100%; background-image: url('/images/test/1.jpg'); background-size: cover; background-repeat: no-repeat; border-radius: 0px;")
+  //            a.live-slide(href="#")
+  //              .image-container.image-format-fill(style="width: 100%; height: 100%; background-image: url('/images/test/2.jpg'); background-size: cover; background-repeat: no-repeat; border-radius: 0px;")
+  //            a.live-slide(href="#")
+  //              .image-container.image-format-fill(style="width: 100%; height: 100%; background-image: url('/images/test/3.jpg'); background-size: cover; background-repeat: no-repeat; border-radius: 0px;")
+  //            a.live-slide(href="#")
+  //              .image-container.image-format-fill(style="width: 100%; height: 100%; background-image: url('/images/test/4.jpg'); background-size: cover; background-repeat: no-repeat; border-radius: 0px;")
+  //            .tile-label 画廊
+  //        a.tile.bg-indigo.fg-white(href="#", data-role="tile", style="opacity: 1; transform: scale(1); transition: 0.3s;")
+  //          .tile-content.iconic
+  //            span.icon.mif-file-upload
+  //          .tile-label 发布话题
+  //    .tile-group.double(style="left: 0px;")
+  //      span.tile-group-title 相册
+  //      .tile-container
+  //        .tile-wide(data-role="tile", data-effect="slideLeft")
+  //          .tile-content
+  //            a.live-slide(href="#")
+  //              .image-container.image-format-fill(style="width: 100%; height: 100%; background-image: url('/images/test/1.jpg'); background-size: cover; background-repeat: no-repeat; border-radius: 0px;")
+  //            a.live-slide(href="#")
+  //              .image-container.image-format-fill(style="width: 100%; height: 100%; background-image: url('/images/test/2.jpg'); background-size: cover; background-repeat: no-repeat; border-radius: 0px;")
+  //            a.live-slide(href="#")
+  //              .image-container.image-format-fill(style="width: 100%; height: 100%; background-image: url('/images/test/3.jpg'); background-size: cover; background-repeat: no-repeat; border-radius: 0px;")
+  //            a.live-slide(href="#")
+  //              .image-container.image-format-fill(style="width: 100%; height: 100%; background-image: url('/images/test/4.jpg'); background-size: cover; background-repeat: no-repeat; border-radius: 0px;")
+  //            .tile-label 画廊
+  //        a.tile.bg-indigo.fg-white(href="#", data-role="tile", style="opacity: 1; transform: scale(1); transition: 0.3s;")
+  //          .tile-content.iconic
+  //            span.icon.mif-file-upload
+  //          .tile-label 发布话题
+  //    .tile-group.one(style="left: 0px;")
+  //      span.tile-group-title 其他
+  //      a.tile-small.bg-gray.fg-white(href="#", data-role="tile", style="opacity: 1; transform: scale(1); transition: 0.3s;")
+  //        .tile-content.iconic
+  //          span.icon.mif-cog
+  //      a.tile-small.bg-cyan.fg-white(href="#", data-role="tile", style="opacity: 1; transform: scale(1); transition: 0.3s;")
+  //        .tile-content.iconic
+  //          span.icon.mif-envelop
+  //      a.tile-small.bg-amber.fg-white(href="#", data-role="tile", style="opacity: 1; transform: scale(1); transition: 0.3s;")
+  //        .tile-content.iconic
+  //          span.icon.mif-star-full
+  //      a.tile-small.bg-green.fg-white(href="#", data-role="tile", style="opacity: 1; transform: scale(1); transition: 0.3s;")
+  //        .tile-content.iconic
+  //          span.icon.mif-user
+  //      a.tile-small.bg-yellow.fg-white(href="#", data-role="tile", style="opacity: 1; transform: scale(1); transition: 0.3s;")
+  //        .tile-content.iconic
+  //          span.icon.mif-users
 

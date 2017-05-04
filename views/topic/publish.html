@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <script src="/js/jquery-3.2.1.js"></script>
+</head>
+<body>
+  <script>
+    var token = window.localStorage.getItem('token');
+  
+    if (token) {
+      $.ajaxSetup({
+        headers: {
+          'x-access-token': token
+        }
+      });
+    }
+    $.ajax({
+      method: 'POST',
+      url: '/test',
+      data: {
+        dataOne: '111',
+        dataTwo: '222'
+      },
+      success: function (res) {
+        console.log(res);
+      },
+      error: function (res) {
+        console.log(res);
+      }
+    })
+  </script>
+</body>
+</html>

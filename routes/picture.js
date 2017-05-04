@@ -12,4 +12,16 @@ router.get('/upload', function (req, res, next) {
   res.render('picture/upload');
 });
 
+router.get('/download', function (req, res, next) {
+  
+});
+
+router.get('/like', function (req, res, next) {
+  
+});
+
+router.get('/comment', function (req, res, next) {
+  
+});
+
 module.exports = router;

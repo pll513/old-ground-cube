@@ -8,7 +8,8 @@ var config = {
   },
   path: __dirname,
   host: 'localhost',
-  port: 3000
+  port: 3000,
+  hostname: 'localhost:3000'
 };
 
 module.exports = config;

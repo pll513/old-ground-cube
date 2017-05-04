@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<head>
+  <title>话题</title>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="/css/metro.min.css">
+  <link rel="stylesheet" href="/css/metro-colors.min.css">
+  <link rel="stylesheet" href="/css/metro-icons.min.css">
+  <link rel="stylesheet" href="/css/metro-responsive.min.css">
+  <link rel="stylesheet" href="/css/metro-rtl.min.css">
+  <link rel="stylesheet" href="/css/metro-schemes.min.css">
+  <style>
+    .topic .topic__img {
+      position: absolute;
+      left: 10px;
+      top: 10px;
+    }
+    
+    .topic .topic__desc {
+      margin: 10px 0 0;
+      position: absolute;
+      max-height: 64px;
+      text-align: justify;
+      left: 100px;
+      right: 10px;
+      top: 10px;
+    }
+    
+    .topic .topic__author {
+      position: absolute;
+      left: 10px;
+      top: 100px;
+    }
+    
+    .topic .topic__comment {
+      position: absolute;
+      right: 10px;
+      top: 100px;
+    }
+    
+    .main {
+      /*width: 1200px;*/
+      /*margin: auto;*/
+      background: #fff;
+    }
+    
+    #form-publish-topic {
+      position: relative;
+      width: 600px;
+      margin: auto;
+    }
+    
+    .input-control.textarea {
+      margin: 0;
+      float: left;
+      width: 520px;
+      height: 80px;
+    }
+    
+    .input-control.textarea > textarea {
+      min-height: 80px;
+      line-height: 20px;
+      resize: none;
+    }
+    
+    #upload-file {
+      position: absolute;
+      left: -9999px;
+    }
+    
+    #upload-image {
+      left: -1px;
+      float: left;
+      border: 1px solid #d9d9d9;
+      width: 80px;
+      height: 80px;
+      background: #fff;
+      color: #888;
+      outline: 0;
+    }
+    
+    #upload-image:active, #upload-image:hover {
+      border-color: #787878;
+      color: #787878;
+    }
+    
+    #button-publish {
+      border: 0;
+      width: 120px;
+      height: 40px;
+      background: #2086bf;
+      color: #fff;
+    }
+  </style>
+  <script src="/js/jquery-3.2.1.js"></script>
+  <script src="/js/metro.js"></script>
+</head>
+<body>
+<div class="container">
+  <header class="margin20 no-margin-left no-margin-right">
+    <div class="clear-float">
+      <div class="place-right">
+        <form>
+          <div class="input-control text margin20" style="width: 300px">
+            <input type="text" name="q" placeholder="搜索话题...">
+            <button class="button"><span class="mif-search"></span></button>
+          </div>
+        </form>
+      </div>
+      <a class="place-left" href="#" title="">
+        <h1>话题</h1>
+      </a>
+    </div>
+  
+  </header>
+  <main class="main">
+    <form id="form-publish-topic" action="" enctype="multipart/form-data">
+      <div class="input-control textarea">
+        <textarea name="topic_text" id="topic_text" rows="3"></textarea>
+      </div>
+      <input id="upload-file" name="topic_pictures" type="file" multiple="multiple" accept="image/*">
+      <button id="upload-image"><span class="mif-images"></span></button>
+      <input id="button-publish" type="submit" value="发表">
+      <div id="picture-preview">
+      
+      </div>
+    </form>
+    <div class="topic-list">
+    
+    </div>
+  </main>
+
+</div>
+<script>
+  var global = {};
+  // 上传图片
+  (function (w, d) {
+    var uploadImageJQ = $('#upload-image');
+    var uploadFileJQ = $('#upload-file');
+    var uploadFile = d.getElementById('upload-file');
+    var uploadImage = d.getElementById('upload-image');
+    var picturePreview = d.getElementById('picture-preview');
+    var picturePreviewJQ = $(picturePreview);
+//    uploadImage.addEventListener('click', function (event) {
+//      event.preventDefault();
+//      uploadFileJQ.trigger('click');
+//    });
+    uploadImageJQ.click(function (event) {
+      event.preventDefault();
+      uploadFileJQ.trigger('click');
+    });
+    uploadFileJQ.bind('change', function (event) {
+      var formData = new FormData();
+      for (var i = 0; i < uploadFile.files.length; ++i) {
+        formData.append("picture" + i, uploadFile.files[i]);
+      }
+      formData.append("test", "test");
+      var token = window.localStorage.getItem('token');
+      if (token) {
+        $.ajaxSetup({
+          headers: {
+            'x-access-token': token
+          }
+        });
+      }
+      $.ajax({
+        url: "/topics/uploadPictures",
+        type: "POST",
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (res) {
+          console.log(res);
+          var imgUrls = global.imgUrls = res.imgUrls;
+          var picturePreviewFragment = d.createDocumentFragment();
+          var imgHtml;
+          picturePreviewJQ.empty();
+          for (var i = 0; i < imgUrls.length; ++i) {
+            imgHtml = d.createElement('img');
+            imgHtml.setAttribute('src', imgUrls[i]);
+            imgHtml.setAttribute('width', '100');
+            imgHtml.setAttribute('height', '100');
+            picturePreviewFragment.appendChild(imgHtml);
+          }
+          picturePreview.appendChild(picturePreviewFragment);
+        },
+        error: function (res) {
+          console.log(res);
+        }
+      });
+    });
+  })(window, document);
+  
+  (function (w, d) {
+    var topicText = d.getElementById('topic_text');
+    var btnPublish = d.getElementById('button-publish');
+    
+    btnPublish.addEventListener('click', function (event) {
+      event.preventDefault();
+      var text = topicText.value;
+      console.log(topicText);
+      console.log(topicText.value);
+      var imgUrls = global.imgUrls;
+      var token = window.localStorage.getItem('token');
+      if (token) {
+        $.ajaxSetup({
+          headers: {
+            'x-access-token': token
+          }
+        });
+        $.ajax({
+          method: 'POST',
+          url: '/topics/publish',
+          data: {
+            topic_text: text,
+            topic_img: imgUrls
+          },
+          success: function (res) {
+            console.log(res);
+          },
+          error: function(res) {
+            console.log(res);
+          }
+        });
+      }
+      
+    });
+    
+  })(window, document);
+</script>
+</body>

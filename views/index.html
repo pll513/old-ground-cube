@@ -1,0 +1,331 @@
+<body style="overflow-y: hidden;">
+<div data-role="charm" id="charmSearch" class="charm right-side" style="opacity: 1; display: none;">
+  <h1 class="text-light">Search</h1>
+  <hr class="thin">
+  <br>
+  <div class="input-control text full-size">
+    <label>
+      <span class="dropdown-toggle drop-marker-light">Anywhere</span>
+      <ul class="d-menu" data-role="dropdown">
+        <li><a onclick="setSearchPlace(this)">Anywhere</a></li>
+        <li><a onclick="setSearchPlace(this)">Options</a></li>
+        <li><a onclick="setSearchPlace(this)">Files</a></li>
+        <li><a onclick="setSearchPlace(this)">Internet</a></li>
+      </ul>
+    </label>
+    <input type="text">
+    <button class="button"><span class="mif-search"></span></button>
+  </div>
+  <span class="charm-closer"></span></div>
+
+<div data-role="charm" id="charmSettings" data-position="top" class="charm top-side" style="opacity: 1; display: none;">
+  <h1 class="text-light">Settings</h1>
+  <hr class="thin">
+  <br>
+  <div class="schemeButtons">
+    <div class="button square-button tile-area-scheme-dark" data-scheme="dark"></div>
+    <div class="button square-button tile-area-scheme-darkBrown" data-scheme="darkBrown"></div>
+    <div class="button square-button tile-area-scheme-darkCrimson" data-scheme="darkCrimson"></div>
+    <div class="button square-button tile-area-scheme-darkViolet" data-scheme="darkViolet"></div>
+    <div class="button square-button tile-area-scheme-darkMagenta" data-scheme="darkMagenta"></div>
+    <div class="button square-button tile-area-scheme-darkCyan" data-scheme="darkCyan"></div>
+    <div class="button square-button tile-area-scheme-darkCobalt" data-scheme="darkCobalt"></div>
+    <div class="button square-button tile-area-scheme-darkTeal" data-scheme="darkTeal"></div>
+    <div class="button square-button tile-area-scheme-darkEmerald" data-scheme="darkEmerald"></div>
+    <div class="button square-button tile-area-scheme-darkGreen" data-scheme="darkGreen"></div>
+    <div class="button square-button tile-area-scheme-darkOrange" data-scheme="darkOrange"></div>
+    <div class="button square-button tile-area-scheme-darkRed" data-scheme="darkRed"></div>
+    <div class="button square-button tile-area-scheme-darkPink" data-scheme="darkPink"></div>
+    <div class="button square-button tile-area-scheme-darkIndigo" data-scheme="darkIndigo"></div>
+    <div class="button square-button tile-area-scheme-darkBlue" data-scheme="darkBlue"></div>
+    <div class="button square-button tile-area-scheme-lightBlue" data-scheme="lightBlue"></div>
+    <div class="button square-button tile-area-scheme-lightTeal" data-scheme="lightTeal"></div>
+    <div class="button square-button tile-area-scheme-lightOlive" data-scheme="lightOlive"></div>
+    <div class="button square-button tile-area-scheme-lightOrange" data-scheme="lightOrange"></div>
+    <div class="button square-button tile-area-scheme-lightPink" data-scheme="lightPink"></div>
+    <div class="button square-button tile-area-scheme-grayed" data-scheme="grayed"></div>
+  </div>
+  <span class="charm-closer"></span></div>
+
+<div class="tile-area fg-white tile-area-scheme-dark" style="height: 100%; max-height: 100% !important; width: 1920px;">
+  <h1 class="tile-area-title">老地方</h1>
+  <div class="tile-area-controls">
+    <button class="image-button icon-right bg-transparent fg-white bg-hover-dark no-border"><span
+        class="sub-header no-margin text-light">Sergey Pimenov</span> <span class="icon mif-user"></span></button>
+    <button class="square-button bg-transparent fg-white bg-hover-dark no-border" onclick="showCharms('#charmSearch')">
+      <span class="mif-search"></span></button>
+    <button class="square-button bg-transparent fg-white bg-hover-dark no-border"
+            onclick="showCharms('#charmSettings')"><span class="mif-cog"></span></button>
+    <a href="../tiles.html" class="square-button bg-transparent fg-white bg-hover-dark no-border"><span
+        class="mif-switch"></span></a>
+  </div>
+  
+  <div class="tile-group double" style="left: 0px;">
+    <span class="tile-group-title">图片</span>
+    
+    <div class="tile-container">
+      
+      <div class="tile" data-role="tile" style="opacity: 1; transform: scale(1); transition: 0.3s;">
+        <div class="tile-content">
+          <div class="image-container image-format-square" style="width: 100%;">
+            <div class="frame">
+              <div
+                  style="width: 100%; height: 150px; background-image: url('/images/test/11.jpg'); background-size: cover; background-repeat: no-repeat; border-radius: 0px;"></div>
+            </div>
+          </div>
+        </div>
+        <span class="tile-label">我的图片</span>
+      </div>
+      
+      <div class="tile bg-blue fg-white" data-role="tile" onclick="document.location.href='http://gmail.com'"
+           style="opacity: 1; transform: scale(1); transition: 0.3s;">
+        <div class="tile-content iconic">
+          <span class="icon mif-upload2"></span>
+        </div>
+        <span class="tile-label">上传图片</span>
+      </div>
+      <div class="tile-wide" data-role="tile" data-effect="slideLeft"
+           style="opacity: 1; transform: scale(1); transition: 0.3s;">
+        <div class="tile-content">
+          <a href="http://google.com/search?q=bear" class="live-slide" style="left: 0px;">
+            <div class="image-container image-format-fill" style="width: 100%; height: 100%;">
+              <div class="frame">
+                <div
+                    style="width: 100%; height: 100%; background-image: url('/images/test/1.jpg'); background-size: cover; background-repeat: no-repeat; border-radius: 0px;"></div>
+              </div>
+            </div>
+          </a>
+          <a href="http://google.com/search?q=cat" class="live-slide" style="left: -310px; display: inline;">
+            <div class="image-container image-format-fill" style="width: 100%; height: 100%;">
+              <div class="frame">
+                <div
+                    style="width: 100%; height: 100%; background-image: url('/images/test/2.jpg'); background-size: cover; background-repeat: no-repeat; border-radius: 0px;"></div>
+              </div>
+            </div>
+          </a>
+          <a href="http://google.com/search?q=dog" class="live-slide" style="left: -310px; display: inline;">
+            <div class="image-container image-format-fill" style="width: 100%; height: 100%;">
+              <div class="frame">
+                <div
+                    style="width: 100%; height: 100%; background-image: url('/images/test/3.jpg'); background-size: cover; background-repeat: no-repeat; border-radius: 0px;"></div>
+              </div>
+            </div>
+          </a>
+          <a href="http://google.com/search?q=eagle" class="live-slide" style="left: -310px; display: inline;">
+            <div class="image-container image-format-fill" style="width: 100%; height: 100%;">
+              <div class="frame">
+                <div
+                    style="width: 100%; height: 100%; background-image: url('/images/test/4.jpg'); background-size: cover; background-repeat: no-repeat; border-radius: 0px;"></div>
+              </div>
+            </div>
+          </a>
+          <a href="http://google.com/search?q=fox" class="live-slide" style="left: -310px; display: inline;">
+            <div class="image-container image-format-fill" style="width: 100%; height: 100%;">
+              <div class="frame">
+                <div
+                    style="width: 100%; height: 100%; background-image: url('/images/test/5.jpg'); background-size: cover; background-repeat: no-repeat; border-radius: 0px;"></div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="tile-label">图片库</div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="tile-group double" style="left: 0px;">
+    <span class="tile-group-title">话题</span>
+    <div class="tile-container">
+      <div class="tile-wide bg-orange fg-white" data-role="tile">
+        <div class="tile-content">
+          <div class="carousel" data-role="carousel" data-controls="false" data-markers="true"
+               style="width: 100%; height: 150px;">
+            <div class="slide" style="display: block;"><img src="/images/test/6.jpg"></div>
+            <div class="slide" style="display: none;"><img src="/images/test/7.jpg"></div>
+            <div class="slide" style="display: none;"><img src="/images/test/8.jpg"></div>
+            <div class="slide" style="display: none;"><img src="/images/test/9.jpg"></div>
+            <div class="slide" style="display: none;"><img src="/images/test/10.jpg"></div>
+            <div class="carousel-bullets"><a class="carousel-bullet bullet-on" href="javascript:void(0)"
+                                             data-num="0"></a><a class="carousel-bullet" href="javascript:void(0)"
+                                                                 data-num="1"></a><a class="carousel-bullet"
+                                                                                     href="javascript:void(0)"
+                                                                                     data-num="2"></a><a
+                class="carousel-bullet" href="javascript:void(0)" data-num="3"></a><a class="carousel-bullet"
+                                                                                      href="javascript:void(0)"
+                                                                                      data-num="4"></a></div>
+          </div>
+          <!--<div class="tile-label">Carousel</div>-->
+        </div>
+      </div>
+      
+      <div class="tile" data-role="tile" style="opacity: 1; transform: scale(1); transition: 0.3s;">
+        <div class="tile-content">
+          <div class="image-container image-format-square" style="width: 100%;">
+            <div class="frame">
+              <div
+                  style="width: 100%; height: 150px; background-image: url('/images/test/12.jpg'); background-size: cover; background-repeat: no-repeat; border-radius: 0px;"></div>
+            </div>
+          </div>
+        </div>
+        <span class="tile-label">我的话题</span>
+      </div>
+      
+      <div class="tile-small bg-amber fg-white" data-role="tile"
+           style="opacity: 1; transform: scale(1); transition: 0.3s;">
+        <div class="tile-content iconic">
+          <span class="icon mif-star-empty"></span>
+        </div>
+      </div>
+      <div class="tile-small bg-green fg-white" data-role="tile"
+           style="opacity: 1; transform: scale(1); transition: 0.3s;">
+        <div class="tile-content iconic">
+          <span class="icon mif-pencil"></span>
+        </div>
+      </div>
+      <!--<div class="tile-small bg-pink fg-white" data-role="tile"-->
+           <!--style="opacity: 1; transform: scale(1); transition: 0.3s;">-->
+        <!--<div class="tile-content iconic">-->
+          <!--<span class="icon mif-headphones"></span>-->
+        <!--</div>-->
+      <!--</div>-->
+      <!--<div class="tile-small bg-yellow fg-white" data-role="tile"-->
+           <!--style="opacity: 1; transform: scale(1); transition: 0.3s;">-->
+        <!--<div class="tile-content iconic">-->
+          <!--<span class="icon mif-lock"></span>-->
+        <!--</div>-->
+      <!--</div>-->
+    </div>
+  </div>
+  
+  <!--<div class="tile-group one" style="left: 0px;">-->
+    <!--<span class="tile-group-title">Office</span>-->
+    <!---->
+    <!--<div class="tile-small bg-blue" data-role="tile" style="opacity: 1; transform: scale(1); transition: 0.3s;">-->
+      <!--<div class="tile-content iconic">-->
+        <!--<img src="../images/outlook.png" class="icon">-->
+      <!--</div>-->
+    <!--</div>-->
+    <!--<div class="tile-small bg-darkBlue" data-role="tile" style="opacity: 1; transform: scale(1); transition: 0.3s;">-->
+      <!--<div class="tile-content iconic">-->
+        <!--<img src="../images/word.png" class="icon">-->
+      <!--</div>-->
+    <!--</div>-->
+    <!--<div class="tile-small bg-green" data-role="tile" style="opacity: 1; transform: scale(1); transition: 0.3s;">-->
+      <!--<div class="tile-content iconic">-->
+        <!--<img src="../images/excel.png" class="icon">-->
+      <!--</div>-->
+    <!--</div>-->
+    <!--<div class="tile-small bg-red" data-role="tile" style="opacity: 1; transform: scale(1); transition: 0.3s;">-->
+      <!--<div class="tile-content iconic">-->
+        <!--<img src="../images/access.png" class="icon">-->
+      <!--</div>-->
+    <!--</div>-->
+    <!--<div class="tile-small bg-orange" data-role="tile" style="opacity: 1; transform: scale(1); transition: 0.3s;">-->
+      <!--<div class="tile-content iconic">-->
+        <!--<img src="../images/powerpoint.png" class="icon">-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
+  <!---->
+  <!--<div class="tile-group double" style="left: 0px;">-->
+    <!--<span class="tile-group-title">Games</span>-->
+    <!--<div class="tile-container">-->
+      <!--<div class="tile" data-role="tile" style="opacity: 1; transform: scale(1); transition: 0.3s;">-->
+        <!--<div class="tile-content">-->
+          <!---->
+          <!--<div class="image-container image-format-square" style="width: 100%;">-->
+            <!--<div class="frame">-->
+              <!--<div-->
+                  <!--style="width: 100%; height: 150px; background-image: url(&quot;../images/grid2.jpg&quot;); background-size: cover; background-repeat: no-repeat; border-radius: 0px;"></div>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
+      <!--<div class="tile-small" data-role="tile" style="opacity: 1; transform: scale(1); transition: 0.3s;">-->
+        <!--<div class="tile-content">-->
+          <!---->
+          <!--<div class="image-container image-format-square" style="width: 100%;">-->
+            <!--<div class="frame">-->
+              <!--<div-->
+                  <!--style="width: 100%; height: 70px; background-image: url(&quot;../images/Battlefield_4_Icon.png&quot;); background-size: cover; background-repeat: no-repeat; border-radius: 0px;"></div>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
+      <!--<div class="tile-small" data-role="tile" style="opacity: 1; transform: scale(1); transition: 0.3s;">-->
+        <!--<div class="tile-content">-->
+          <!---->
+          <!--<div class="image-container image-format-square" style="width: 100%;">-->
+            <!--<div class="frame bg-steel">-->
+              <!--<div-->
+                  <!--style="width: 100%; height: 70px; background-image: url(&quot;../images/Crysis-2-icon.png&quot;); background-size: cover; background-repeat: no-repeat; border-radius: 0px;"></div>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
+      <!--<div class="tile-small" data-role="tile" style="opacity: 1; transform: scale(1); transition: 0.3s;">-->
+        <!--<div class="tile-content">-->
+          <!---->
+          <!--<div class="image-container image-format-square" style="width: 100%;">-->
+            <!--<div class="frame bg-dark">-->
+              <!--<div-->
+                  <!--style="width: 100%; height: 70px; background-image: url(&quot;../images/WorldofTanks.png&quot;); background-size: cover; background-repeat: no-repeat; border-radius: 0px;"></div>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
+      <!--<div class="tile-small" data-role="tile" style="opacity: 1; transform: scale(1); transition: 0.3s;">-->
+        <!--<div class="tile-content">-->
+          <!---->
+          <!--<div class="image-container image-format-square" style="width: 100%;">-->
+            <!--<div class="frame">-->
+              <!--<div-->
+                  <!--style="width: 100%; height: 70px; background-image: url(&quot;../images/halo.jpg&quot;); background-size: cover; background-repeat: no-repeat; border-radius: 0px;"></div>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
+      <!--<div class="tile-wide bg-green fg-white" data-role="tile"-->
+           <!--style="opacity: 1; transform: scale(1); transition: 0.3s;">-->
+        <!--<div class="tile-content iconic">-->
+          <!--<img src="../images/x-box.png" class="icon">-->
+        <!--</div>-->
+        <!--<div class="tile-label">X-Box Live</div>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
+  
+  <div class="tile-group double" style="left: 0px;">
+    <span class="tile-group-title">其他</span>
+    <div class="tile-container">
+      <div class="tile bg-teal fg-white" data-role="tile" style="opacity: 1; transform: scale(1); transition: 0.3s;">
+        <div class="tile-content iconic">
+          <span class="icon mif-images"></span>
+        </div>
+        <span class="tile-label">相册</span>
+      </div>
+      <div class="tile bg-darkPink fg-white" data-role="tile"
+           style="opacity: 1; transform: scale(1); transition: 0.3s;">
+        <div class="tile-content iconic">
+          <span class="icon mif-calendar"></span>
+        </div>
+        <span class="tile-label">历史</span>
+      </div>
+      <div class="tile bg-cyan fg-white" data-role="tile" style="opacity: 1; transform: scale(1); transition: 0.3s;">
+        <div class="tile-content iconic">
+          <span class="icon mif-envelop"></span>
+        </div>
+        <div class="tile-label">通知</div>
+      </div>
+      <div class="tile bg-darkBlue fg-white" data-role="tile"
+           style="opacity: 1; transform: scale(1); transition: 0.3s;">
+        <div class="tile-content iconic">
+          <span class="icon mif-cog"></span>
+        </div>
+        <span class="tile-label">设置</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
