@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>图片</title>
+  <link rel="stylesheet" type="text/css" href="/css/metro.min.css">
+  <link rel="stylesheet" type="text/css" href="/css/metro-colors.min.css">
+  <link rel="stylesheet" type="text/css" href="/css/metro-icons.min.css">
+  <link rel="stylesheet" type="text/css" href="/css/metro-responsive.min.css">
+  <link rel="stylesheet" type="text/css" href="/css/metro-rtl.min.css">
+  <link rel="stylesheet" type="text/css" href="/css/metro-schemes.min.css">
+  <style>
+    .main {
+      width: 46rem;
+      margin: 200px auto;
+      background-color: #fff;
+      opacity: 0;
+      -webkit-transform: scale(.8);
+      transform: scale(.8);
+    }
+    
+    .input-control.textarea {
+      width: 100%;
+    }
+    
+    .input-control.textarea > textarea {
+      width: 100%;
+    }
+    
+    .avatar {
+      background-size: cover;
+      background-position: center;
+      width: 50px;
+      height: 50px;
+    }
+    
+    .picture-info {
+      margin-bottom: 20px;
+    }
+    
+    #picture-author_name {
+      margin-right: 10px;
+    }
+    
+    .picture-info:before, .picture-info:after {
+      content: " ";
+      display: table;
+      clear: both;
+    }
+    
+    .picture-info__item {
+      float: left;
+      line-height: 50px;
+      margin-left: 5px;
+    }
+    
+    #button-like {
+      margin-left: 100px;
+      color: #fff;
+    }
+    
+    #picture-picture {
+      max-height: 400px;
+    }
+    
+    .comment__head {
+      
+    }
+    .comment__author-avatar {
+      
+    }
+    .comment__author-name {
+      
+    }
+    .comment__time {
+      
+    }
+    .comment__text {
+      
+    }
+  </style>
+  <script src="/js/jquery-3.2.1.js"></script>
+  <script src="/js/metro.js"></script>
+</head>
+<body class="bg-darkerGray">
+<main style="opacity: 1;transform: scale(1);transition: 0.5s;" class="main padding20 block-shadow">
+  <div>
+    <h1 class="text-light">图片详情</h1>
+    <hr class="thin">
+    <br>
+    <div>
+      <div class="picture-info">
+        <div class="avatar picture-info__item" id="picture-author_avatar"></div>
+        <a id="picture-author_name" class="picture-info__item"></a>
+        <span class="picture-info__item">贡献于</span>
+        <span id="picture-time" class="picture-info__item"></span>
+        <button id="button-like" class="button bg-pink">喜欢<span id="like-count"></span></button>
+      </div>
+      <img id="picture-picture" src="" alt="">
+    </div>
+    <h3 class="text-light">图片介绍</h3>
+    <hr class="thin">
+    <div id="picture-desc"></div>
+    <br>
+    <h3 class="text-light">下载</h3>
+    <hr class="thin">
+    <br>
+    <div id="button-download-list">
+      <a download="" id="download-origin" class="btn-download button primary" data-size="1">原图</a>
+      <a download="" id="download-2-big" class="btn-download button success" data-size="2">放大2倍</a>
+      <a download="" id="download-2-small" class="btn-download button info" data-size="0.5">缩小2倍</a>
+    </div>
+    <h3 class="text-light">评论</h3>
+    <hr class="thin">
+    <br>
+    <div id="comment-area">
+      <div class="comment__item">
+        <div class="comment__head">
+          <div class="comment__author-avatar avatar"></div>
+          <div class="comment__author-name"></div>
+          <div class="comment__time"></div>
+        </div>
+        <div class="comment__text"></div>
+      </div>
+    </div>
+    <form action="">
+      <div class="input-control textarea">
+        <textarea></textarea>
+      </div>
+      <div class="form-actions">
+        <button id="publish-button" type="submit" class="button primary">评论</button>
+      </div>
+    </form>
+  </div>
+</main>
+<script>
+  
+  var global = {};
+  
+  // 获取图片ID
+  (function () {
+    var href = window.location.href;
+    var lastIndex = href.lastIndexOf('/');
+    global.pictureId = href.slice(lastIndex + 1);
+  })();
+  
+  // 获取图片详情
+  (function (w, d) {
+    
+    var picturePicture = d.getElementById('picture-picture');
+    var pictureAuthorName = d.getElementById('picture-author_name');
+    var pictureTime = d.getElementById('picture-time');
+    var pictureDesc = d.getElementById('picture-desc');
+    var pictureAuthorAvatar = d.getElementById('picture-author_avatar');
+    var downloadOrigin = d.getElementById('download-origin');
+    var downTwoBig = d.getElementById('download-2-big');
+    var downTwoSmall = d.getElementById('download-2-small');
+    var likeCount = d.getElementById('like-count');
+    
+    $.ajax({
+      method: 'POST',
+      url: '/pictures/pictureDetail',
+      data: {
+        picture_id: global.pictureId
+      },
+      success: function (res) {
+        console.log(res);
+        var picture = res.data;
+        var commentList = picture.comments;
+        var commentListHtml = '';
+        global.picture = picture;
+        picturePicture.setAttribute('src', picture.url);
+        pictureTime.innerHTML = formatTime(picture.time);
+        pictureDesc.innerHTML = picture.desc;
+        pictureAuthorName.innerHTML = picture.author_name;
+        pictureAuthorName.setAttribute('href', '/users/' + picture.author_id);
+        likeCount.innerHTML = picture.like_count;
+        
+        for (var i = 0; i < commentList.length; ++i) {
+          commentListHtml += '';
+        }
+        
+        $('#comment-area').append(commentListHtml);
+        
+        downloadOrigin.setAttribute('href', picture.url);
+        downTwoBig.setAttribute('href', picture.url_big_2);
+        downTwoSmall.setAttribute('href', picture.url_small_2);
+        
+        $.ajax({
+          method: 'POST',
+          url: '/users/basicInfo',
+          data: {
+            user_id: picture.author_id
+          },
+          success: function (res) {
+            console.log(res);
+            pictureAuthorAvatar.setAttribute('style', 'background-image:url(' + res.data.avatar + ');');
+          },
+          error: function (res) {
+            console.log(res);
+          }
+        });
+      },
+      error: function (res) {
+        console.log(res);
+      }
+    })
+    
+  })(window, document);
+  
+  // 下载图片
+  (function (w, d) {
+
+
+//    var buttonDownloadList = d.getElementById('button-download-list');
+//    var buttonDownLoad = buttonDownloadList.getElementsByClassName('button');
+//
+//    for (var i = 0; i < buttonDownLoad.length; ++i) {
+//      buttonDownLoad[i].setAttribute('href', global.picture.url + '?size=' + buttonDownLoad[i].getAttribute('data-size'));
+//    }
+
+//    buttonDownloadList.addEventListener('click', function (event) {
+//      event.preventDefault();
+//      var target = event.target;
+//      if (~target.className.indexOf('btn-download')) {
+//        $.ajax({
+//          method: 'POST',
+//          url: '/pictures/download',
+//          data: {
+//            picture_id: global.pictureId,
+//            size: target.getAttribute('data-size')
+//          },
+//          success: function (res) {
+//
+//          },
+//          error: function (res) {
+//            console.log(res);
+//          }
+//        });
+//      }
+//    });
+//
+  })(window, document);
+  
+  // 喜欢
+  (function (w, d) {
+    
+    var buttonLike = d.getElementById('button-like');
+    var likeCount = d.getElementById('like-count');
+    
+    buttonLike.addEventListener('click', function (event) {
+      event.preventDefault();
+      var token = window.localStorage.getItem('token');
+      
+      if (token) {
+        $.ajaxSetup({
+          headers: {
+            'x-access-token': token
+          }
+        });
+      }
+      $.ajax({
+        method: "POST",
+        url: '/pictures/like',
+        data: {
+          picture_id: global.pictureId
+        },
+        success: function (res) {
+          console.log(res);
+          if (res.success) {
+            likeCount.innerHTML = parseInt(likeCount.innerHTML) + 1
+          } else {
+            // 通知已经点赞过了
+          }
+        },
+        error: function (res) {
+          console.log(res);
+        }
+      });
+    });
+    
+  })(window, document);
+  
+  
+  // 发表评论
+  (function (w, d) {
+    
+    
+  })(window, document);
+  
+  function formatTime(time) {
+    var date = new Date(time);
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+    var hour = date.getHours();
+    var minute = date.getMinutes();
+    var minuteStr = minute < 10 ? '0' + minute : '' + minute;
+    return year + '/' + month + '/' + day + ' ' + hour + ':' + minuteStr;
+  }
+</script>
+</body>
+</html>

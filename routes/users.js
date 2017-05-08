@@ -88,4 +88,16 @@ router.post('/changeAvatar', [jwtAuth, multipartMiddleware], function (req, res,
   });
 });
 
+router.post('/basicInfo', function (req, res, next) {
+  MongoClient.connect(mongoUrl, function (err, db) {
+    db.collection('user').findOne({_id: ObjectID(req.body.user_id)}, {
+      _id: 1,
+      name: 1,
+      avatar: 1
+    }, function (err, user) {
+      res.json({success: true, data: user});
+    })
+  });
+});
+
 module.exports = router;

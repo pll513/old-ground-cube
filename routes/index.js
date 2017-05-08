@@ -60,7 +60,7 @@ router.post('/login', function (req, res, next) {
           });
         } else {
           var token = jwt.sign(user, 'secret', {
-            expiresIn: 24 * 60 * 60 // expires in 24 hours
+            expiresIn: 24 * 60 * 60 * 10 // 十天有效
           });
           res.json({
             success: true,

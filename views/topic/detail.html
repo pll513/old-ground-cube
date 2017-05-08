@@ -10,7 +10,142 @@
   <link rel="stylesheet" href="/css/metro-rtl.min.css">
   <link rel="stylesheet" href="/css/metro-schemes.min.css">
   <style>
+    .comment {
+      clear: both;
+      margin: 10px 0;
+    }
     
+    .comment:before, .comment:after {
+      display: table;
+      content: " ";
+      clear: both;
+    }
+    
+    .comment__info {
+      float: left;
+      width: 50px;
+      background: #fff;
+      margin-right: 10px;
+    }
+    
+    .comment__info:before, .comment__info:after {
+      content: " ";
+      clear: both;
+      display: table;
+    }
+    
+    .comment__main {
+      float: left;
+      background: #eee;
+    }
+    
+    .comment__avatar {
+      float: left;
+      clear: both;
+      width: 50px;
+      height: 50px;
+    }
+    
+    .comment__author {
+      float: left;
+      width: 50px;
+      height: 20px;
+      line-height: 20px;
+      text-align: center;
+    }
+    
+    .comment__text {
+      width: 500px;
+      padding: 10px;
+      min-height: 50px;
+    }
+    
+    .comment__extra {
+      position: relative;
+      width: 100%;
+      height: 50px;
+      text-align: right;
+      padding: 0 10px;
+    }
+    
+    .comment__time {
+      height: 50px;
+      line-height: 50px;
+    }
+    
+    .comment__button {
+      /*float: right;*/
+      border: 0;
+      background: transparent;
+      text-decoration: underline;
+      color: #1b6eae;
+      outline: 0;
+    }
+    
+    .reply-form {
+      position: absolute;
+      right: -350px;
+      bottom: 0;
+      width: 320px;
+      background: #1ba1e2;
+      padding: 10px;
+    }
+    
+    .reply-form:before, .reply-form:after {
+      display: table;
+      content: "";
+      clear: both;
+    }
+    
+    #reply-textarea {
+      clear: both;
+      float: left;
+      margin-bottom: 10px;
+      padding: 10px;
+      width: 300px;
+      outline: 0;
+    }
+    
+    #reply-submit {
+      float: left;
+      width: 80px;
+      height: 30px;
+      background: #1b6eae;
+      color: #fff;
+      border: 0;
+      outline: 0;
+    }
+    
+    .comment__reply {
+      margin: 0 80px;
+    }
+    
+    .reply__item {
+      background: #f6f6f6;
+      margin-bottom: 5px;
+    }
+    
+    .reply__reply {
+      margin: 0 10px;
+    }
+    
+    .reply__text {
+      padding: 10px 0;
+    }
+    
+    .reply__extra {
+      position: relative;
+      text-align: right;
+    }
+    
+    .reply__button {
+      margin-left: 10px;
+      text-decoration: underline;
+      outline: none;
+      border: 0;
+      background: transparent;
+      color: #1b6eae;
+    }
   </style>
   <script src="/js/jquery-3.2.1.js"></script>
   <script src="/js/metro.js"></script>
@@ -32,7 +167,279 @@
       </a>
     </div>
   </header>
-  
+  <main>
+    <div id="topic-detail">
+      <div>
+        <img id="author-avatar" src="" alt="">
+        <div id="author-name">作者昵称</div>
+        <div id="topic-time">发布时间</div>
+      </div>
+      <div id="topic-image">
+      
+      </div>
+      <div id="topic-text">
+      
+      </div>
+      <div id="topic-comment">
+      
+      </div>
+    </div>
+    
+    <form class="form-comment" action="">
+      <div class="input-control textarea">
+        <textarea id="textarea-comment"></textarea>
+      </div>
+      <br><br>
+      <div class="form-actions">
+        <button id="btn-submit-comment" type="submit">评论</button>
+      </div>
+    </form>
+  </main>
 </div>
+<script>
+  var global = {};
+  
+  // 获取评论ID
+  (function () {
+    var href = window.location.href;
+    var lastIndex = href.lastIndexOf('/');
+    global.topicId = href.slice(lastIndex + 1);
+  })();
+  
+  // 获取话题详情
+  (function (w, d) {
+    var topicTime = d.getElementById('topic-time');
+    var topicAuthorName = d.getElementById('author-name');
+    var topicAuthorAvatar = d.getElementById('author-avatar');
+    var topicImage = d.getElementById('topic-image');
+    var topicText = d.getElementById('topic-text');
+    var topicComment = d.getElementById('topic-comment');
+    
+    $.ajax({
+      method: 'POST',
+      url: '/topics/topicDetail',
+      data: {
+        topic_id: global.topicId
+      },
+      success: function (res) {
+        console.log(res);
+        var topicDetail = res.data;
+        var i, j;
+        
+        // 话题详情主体
+        var topicImageList = topicDetail.images;
+        var topicImageListFragment = d.createDocumentFragment();
+        topicTime.innerHTML = formatTime(topicDetail.time);
+        topicAuthorName.innerHTML = topicDetail.author_name;
+        topicAuthorAvatar.setAttribute('src', topicDetail.author_avatar);
+        topicText.innerHTML = topicDetail.text;
+        for (i = 0; i < topicImageList.length; ++i) {
+          var img = d.createElement('img');
+          img.setAttribute('src', topicImageList[i]);
+          topicImageListFragment.appendChild(img);
+        }
+        topicImage.appendChild(topicImageListFragment);
+        
+        
+        // 话题评论
+        var commentList = topicDetail.comments || [];
+        var commentListFragment = d.createDocumentFragment();
+        for (i = 0; i < commentList.length; ++i) {
+          var first = commentList[i].first;
+          var replyList = commentList[i].replies || [];
+          var comment = d.createElement('div');
+          var commentInfo = d.createElement('div');
+          var commentAuthor = d.createElement('a');
+          var commentAvatar = d.createElement('img');
+          var commentTime = d.createElement('span');
+          var commentMain = d.createElement('div');
+          var commentText = d.createElement('div');
+          var commentReply = d.createElement('div');
+          var commentExtra = d.createElement('div');
+          var commentButton = d.createElement('button');
+          for (j = 0; j < replyList.length; ++j) {
+            var item = replyList[j];
+            var reply = d.createElement('div');
+            var replyHead = d.createElement('div');
+            var replyFromName = d.createElement('a');
+            var replyReply = d.createElement('span');
+            var replyToName = d.createElement('a');
+            var replyText = d.createElement('div');
+            var replyExtra = d.createElement('div');
+            var replyButton = d.createElement('button');
+            var replyTime = d.createElement('span');
+            reply.setAttribute('class', 'reply__item');
+            replyHead.setAttribute('class', 'reply__head');
+            replyFromName.setAttribute('class', 'reply__from-name');
+            replyReply.setAttribute('class', 'reply__reply');
+            replyToName.setAttribute('class', 'reply__to-name');
+            replyText.setAttribute('class', 'reply__text');
+            replyExtra.setAttribute('class', 'reply__extra');
+            replyTime.setAttribute('class', 'reply__time');
+            replyButton.setAttribute('class', 'reply__button');
+            replyFromName.innerHTML = item.from_name;
+            replyFromName.setAttribute('href', '/users/' + item.from_id);
+            replyReply.innerHTML = '回复';
+            replyToName.innerHTML = item.to_name;
+            replyToName.setAttribute('href', '/users/' + item.to_id);
+            replyText.innerHTML = item.text;
+            replyTime.innerHTML = formatTime(item.time);
+            replyButton.innerHTML = '回复';
+            replyButton.setAttribute('data-to_id', item.from_id);
+            replyButton.setAttribute('data-to_name', item.from_name);
+            replyButton.setAttribute('data-comment_id', commentList[i].comment_id);
+            replyExtra.appendChild(replyTime);
+            replyExtra.appendChild(replyButton);
+            replyHead.appendChild(replyFromName);
+            replyHead.appendChild(replyReply);
+            replyHead.appendChild(replyToName);
+            reply.appendChild(replyHead);
+            reply.appendChild(replyText);
+            reply.appendChild(replyExtra);
+            commentReply.appendChild(reply);
+          }
+          
+          commentAuthor.setAttribute('href', '/users/' + first.author_id);
+          commentAuthor.setAttribute('class', 'comment__author');
+          commentAuthor.innerHTML = first.author_name;
+          commentAvatar.setAttribute('src', first.author_avatar);
+          commentAvatar.setAttribute('class', 'comment__avatar');
+          commentTime.setAttribute('class', 'comment__time');
+          commentTime.innerHTML = formatTime(first.time);
+          commentText.setAttribute('class', 'comment__text');
+          commentText.innerHTML = first.text;
+          commentButton.innerHTML = '回复';
+          commentButton.setAttribute('data-to_id', first.author_id);
+          commentButton.setAttribute('data-to_name', first.author_name);
+          commentButton.setAttribute('data-comment_id', commentList[i].comment_id);
+          commentButton.setAttribute('class', 'comment__button');
+          commentInfo.setAttribute('class', 'comment__info');
+          commentExtra.setAttribute('class', 'comment__extra');
+          commentReply.setAttribute('class', 'comment__reply');
+          commentInfo.appendChild(commentAvatar);
+          commentInfo.appendChild(commentAuthor);
+          commentExtra.appendChild(commentTime);
+          commentExtra.appendChild(commentButton);
+          commentMain.setAttribute('class', 'comment__main');
+          commentMain.appendChild(commentText);
+          commentMain.appendChild(commentReply);
+          commentMain.appendChild(commentExtra);
+          comment.setAttribute('class', 'comment');
+          comment.appendChild(commentInfo);
+          comment.appendChild(commentMain);
+          commentListFragment.appendChild(comment);
+        }
+        topicComment.appendChild(commentListFragment);
+      },
+      error: function (res) {
+        console.log(res);
+      }
+    });
+    
+  })(window, document);
+  
+  // 评论
+  (function (w, d) {
+    
+    var btnSubmitComment = d.getElementById('btn-submit-comment');
+    var textareaComment = d.getElementById('textarea-comment');
+    
+    btnSubmitComment.addEventListener('click', function (event) {
+      event.preventDefault();
+      var token = window.localStorage.getItem('token');
+      if (token) {
+        $.ajaxSetup({
+          headers: {
+            'x-access-token': token
+          }
+        });
+      }
+      $.ajax({
+        method: 'POST',
+        url: '/topics/comment',
+        data: {
+          topic_id: global.topicId,
+          comment_text: textareaComment.value
+        },
+        success: function (res) {
+          console.log(res);
+        },
+        error: function (res) {
+          console.log(res);
+        }
+      });
+    });
+    
+  })(window, document);
+  
+  // 回复
+  (function (w, d) {
+    
+    var reply = d.createElement('form');
+    var replyTextarea = d.createElement('textarea');
+    var replySubmit = d.createElement('button');
+    replyTextarea.setAttribute('id', 'reply-textarea');
+    replySubmit.setAttribute('id', 'reply-submit');
+    replySubmit.innerHTML = '回复';
+    reply.setAttribute('class', 'reply-form');
+    reply.appendChild(replyTextarea);
+    reply.appendChild(replySubmit);
+    
+    d.body.addEventListener('click', function (event) {
+      var className = event.target.className;
+      var id = event.target.id;
+      if (~className.indexOf('comment__button') || ~className.indexOf('reply__button')) {
+        var replyInfo = event.target.parentNode;
+        replySubmit.setAttribute('data-to_id', event.target.getAttribute('data-to_id'));
+        replySubmit.setAttribute('data-to_name', event.target.getAttribute('data-to_name'));
+        replySubmit.setAttribute('data-comment_id', event.target.getAttribute('data-comment_id'));
+        replyInfo.appendChild(reply);
+      } else if (id === 'reply-submit') {
+        event.preventDefault();
+        var toId = event.target.getAttribute('data-to_id');
+        var toName = event.target.getAttribute('data-to_name');
+        var commentId = event.target.getAttribute('data-comment_id');
+        var text = d.getElementById('reply-textarea').value;
+        var token = window.localStorage.getItem('token');
+        if (token) {
+          $.ajaxSetup({
+            headers: {
+              'x-access-token': token
+            }
+          });
+        }
+        $.ajax({
+          method: 'POST',
+          url: '/topics/reply',
+          data: {
+            topic_id: global.topicId,
+            comment_id: commentId,
+            to_id: toId,
+            to_name: toName,
+            reply_text: text
+          },
+          success: function (res) {
+            console.log(res);
+          },
+          error: function (res) {
+            console.log(res);
+          }
+        });
+      }
+    });
+    
+  })(window, document);
+  
+  function formatTime(time) {
+    var date = new Date(time);
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+    var hour = date.getHours();
+    var minute = date.getMinutes();
+    var minuteStr = minute < 10 ? '0' + minute : '' + minute;
+    return year + '/' + month + '/' + day + ' ' + hour + ':' + minuteStr;
+  }
+</script>
 </body>
 </html>

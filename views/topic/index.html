@@ -124,7 +124,7 @@
       
       </div>
     </form>
-    <div class="topic-list">
+    <div id="topic-list">
     
     </div>
   </main>
@@ -132,6 +132,7 @@
 </div>
 <script>
   var global = {};
+  global.currPage = 1;
   // 上传图片
   (function (w, d) {
     var uploadImageJQ = $('#upload-image');
@@ -190,6 +191,7 @@
     });
   })(window, document);
   
+  // 发表话题
   (function (w, d) {
     var topicText = d.getElementById('topic_text');
     var btnPublish = d.getElementById('button-publish');
@@ -217,12 +219,71 @@
           success: function (res) {
             console.log(res);
           },
-          error: function(res) {
+          error: function (res) {
             console.log(res);
           }
         });
       }
       
+    });
+    
+  })(window, document);
+  
+  // 获取话题列表
+  (function (w, d) {
+    
+    var divTopicList = d.getElementById('topic-list');
+    
+    
+    $.ajax({
+      method: 'POST',
+      url: '/topics/topicList',
+      data: {
+        page_num: 1,
+        page_size: 10,
+        sort_by: '_id'
+      },
+      success: function (res) {
+        console.log(res);
+        var topicList = res.data;
+        
+        // 话题列表渲染
+        var topicListFragment = d.createDocumentFragment();
+        for (var i = 0; i < topicList.length; ++i) {
+          var topic = d.createElement('a');
+          var topicInfo = d.createElement('div');
+          var topicAuthor = d.createElement('a');
+          var topicTime = d.createElement('span');
+          var topicComment = d.createElement('span');
+          var topicImage = d.createElement('div');
+          var topicDesc = d.createElement('div');
+          topic.setAttribute('class', 'topic__item');
+          topic.setAttribute('href', '/topics/' + topicList[i]._id);
+          topicInfo.setAttribute('class', 'topic__info');
+          topicAuthor.setAttribute('class', 'topic__author');
+          topicTime.setAttribute('class', 'topic__time');
+          topicComment.setAttribute('class', 'topic__comment');
+          topicImage.setAttribute('class', 'topic__image');
+          topicDesc.setAttribute('class', 'topic__desc');
+          topicAuthor.innerHTML = topicList[i].author_name;
+          topicAuthor.setAttribute('href', '/users/' + topicList[i].author_id);
+          topicTime.innerHTML = topicList[i].time;  //格式需要修改
+          topicComment.innerHTML = topicList[i].comment_count;
+          topicComment.setAttribute('style', 'background-image:url("' + topicList[i].images[0] + '");');
+          topicDesc.innerHTML = topicList[i].text;
+          topicInfo.appendChild(topicAuthor);
+          topicInfo.appendChild(topicTime);
+          topicInfo.appendChild(topicComment);
+          topic.appendChild(topicInfo);
+          topic.appendChild(topicImage);
+          topic.appendChild(topicDesc);
+          topicListFragment.appendChild(topic);
+        }
+        divTopicList.appendChild(topicListFragment);
+      },
+      error: function (res) {
+        console.log(res);
+      }
     });
     
   })(window, document);
