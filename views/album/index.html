@@ -12,32 +12,7 @@
   <script src="/js/jquery-3.2.1.js"></script>
   <script src="/js/metro.js"></script>
 </head>
-<body>
-<div class="cell">
-  <div id="car_m_2" class="carousel" data-role="carousel" data-height="200" data-controls="false" data-markers="false" data-auto="false" style="width: 100%; height: 200px;">
-    <div class="slide" style="display: block; left: -432px;"><div class="image-container image-format-fill" style="width: 100%; height: 100%;"><div class="frame"><div style="width: 100%; height: 100%; background-image: url(&quot;images/1.jpg&quot;); background-size: cover; background-repeat: no-repeat; border-radius: 0px;"></div></div></div></div>
-    <div class="slide" style="display: block; left: 0px;"><div class="image-container image-format-fill" style="width: 100%; height: 100%;"><div class="frame"><div style="width: 100%; height: 100%; background-image: url(&quot;images/2.jpg&quot;); background-size: cover; background-repeat: no-repeat; border-radius: 0px;"></div></div></div></div>
-    <div class="slide" style="display: block; left: -432px;"><div class="image-container image-format-fill" style="width: 100%; height: 100%;"><div class="frame"><div style="width: 100%; height: 100%; background-image: url(&quot;images/3.jpg&quot;); background-size: cover; background-repeat: no-repeat; border-radius: 0px;"></div></div></div></div>
-    <div class="slide" style="display: block; left: 432px;"><div class="image-container image-format-fill" style="width: 100%; height: 100%;"><div class="frame"><div style="width: 100%; height: 100%; background-image: url(&quot;images/4.jpg&quot;); background-size: cover; background-repeat: no-repeat; border-radius: 0px;"></div></div></div></div>
-  </div>
-  <div id="car_m_2_thumbs" class="padding20 bg-grayLighter align-center">
-    <div class="thumb" data-index="1"><div class="image-container image-format-fill" style="width: 100%; height: 100%;"><div class="frame"><div style="width: 100%; height: 100%; background-image: url(&quot;images/1.jpg&quot;); background-size: cover; background-repeat: no-repeat; border-radius: 0px;"></div></div></div></div>
-    <div class="thumb" data-index="2"><div class="image-container image-format-fill" style="width: 100%; height: 100%;"><div class="frame"><div style="width: 100%; height: 100%; background-image: url(&quot;images/2.jpg&quot;); background-size: cover; background-repeat: no-repeat; border-radius: 0px;"></div></div></div></div>
-    <div class="thumb" data-index="3"><div class="image-container image-format-fill" style="width: 100%; height: 100%;"><div class="frame"><div style="width: 100%; height: 100%; background-image: url(&quot;images/3.jpg&quot;); background-size: cover; background-repeat: no-repeat; border-radius: 0px;"></div></div></div></div>
-    <div class="thumb" data-index="4"><div class="image-container image-format-fill" style="width: 100%; height: 100%;"><div class="frame"><div style="width: 100%; height: 100%; background-image: url(&quot;images/4.jpg&quot;); background-size: cover; background-repeat: no-repeat; border-radius: 0px;"></div></div></div></div>
-  </div>
-  <script>
-    $(function(){
-      var car_m_2 = $('#car_m_2').data('carousel');
-      var thumbs = $('#car_m_2_thumbs > .thumb');
-      $.each(thumbs, function(){
-        var thumb = $(this),  index = thumb.data('index') - 1;
-        thumb.on('click', function(){
-          car_m_2.slideTo(index);
-        });
-      });
-    });
-  </script>
-</div>
+<body class="bg-darkGray">
+
 </body>
 </html>

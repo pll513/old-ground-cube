@@ -94,6 +94,21 @@ router.post('/publish', jwtAuth, function (req, res, next) {
   
 });
 
+router.post('/topicComment', function (req, res, next) {
+  console.log(req.body);
+  var pageIndex = req.body.page_index;
+  var pageSize = req.body.page_size;
+  var topicId = req.body.topic_id;
+  
+  MongoClient.connect(mongoUrl, function (err, db) {
+    db.collection('topic').findOne({_id: ObjectID(topicId)}, function (err, topic) {
+      if (err) return res.json({success: false});
+      db.close();
+      res.json({success: true, data: topic.comments});
+    });
+  });
+});
+
 router.post('/comment', jwtAuth, function (req, res, next) {
   var authorId = req.decoded._id;
   var authorName = req.decoded.name;
@@ -111,6 +126,9 @@ router.post('/comment', jwtAuth, function (req, res, next) {
             first: {author_id: authorId, text: text, time: time, author_name: authorName, author_avatar: authorAvatar},
             replies: []
           }
+        },
+        $inc: {
+          comment_count: 1
         }
       }, function (err, result) {
         assert.equal(null, err);
@@ -135,7 +153,7 @@ router.post('/reply', jwtAuth, function (req, res, next) {
   console.log(commentId);
   
   MongoClient.connect(mongoUrl, function (err, db) {
-    db.collection('topic').findOne()
+    db.collection('topic').findOne();
     db.collection('topic').updateOne({_id: ObjectID(topicId), "comments.comment_id": commentId},
       {
         $push: {
@@ -147,6 +165,9 @@ router.post('/reply', jwtAuth, function (req, res, next) {
             text: text,
             time: time
           }
+        },
+        $inc: {
+          comment_count: 1
         }
       }, function (err, result) {
         assert.equal(null, err);

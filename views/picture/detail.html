@@ -11,7 +11,7 @@
   <link rel="stylesheet" type="text/css" href="/css/metro-schemes.min.css">
   <style>
     .main {
-      width: 46rem;
+      width: 36rem;
       margin: 200px auto;
       background-color: #fff;
       opacity: 0;
@@ -36,6 +36,16 @@
     
     .picture-info {
       margin-bottom: 20px;
+      color: #555
+    }
+    
+    #picture-desc {
+      color: #555;
+    }
+    
+    #picture-author_avatar {
+      background-size: cover;
+      background-position: center;
     }
     
     #picture-author_name {
@@ -55,7 +65,7 @@
     }
     
     #button-like {
-      margin-left: 100px;
+      margin-left: 40px;
       color: #fff;
     }
     
@@ -66,17 +76,20 @@
     .comment__head {
       
     }
-    .comment__author-avatar {
-      
-    }
+    
     .comment__author-name {
       
     }
+    
     .comment__time {
-      
+      margin-left: 20px;
+      font-size: 14px;
+      color: #888;
     }
+    
     .comment__text {
-      
+      margin: 10px 20px 30px;
+      color: #555;
     }
   </style>
   <script src="/js/jquery-3.2.1.js"></script>
@@ -114,18 +127,11 @@
     <hr class="thin">
     <br>
     <div id="comment-area">
-      <div class="comment__item">
-        <div class="comment__head">
-          <div class="comment__author-avatar avatar"></div>
-          <div class="comment__author-name"></div>
-          <div class="comment__time"></div>
-        </div>
-        <div class="comment__text"></div>
-      </div>
+      
     </div>
     <form action="">
       <div class="input-control textarea">
-        <textarea></textarea>
+        <textarea id="comment-textarea"></textarea>
       </div>
       <div class="form-actions">
         <button id="publish-button" type="submit" class="button primary">评论</button>
@@ -166,8 +172,6 @@
       success: function (res) {
         console.log(res);
         var picture = res.data;
-        var commentList = picture.comments;
-        var commentListHtml = '';
         global.picture = picture;
         picturePicture.setAttribute('src', picture.url);
         pictureTime.innerHTML = formatTime(picture.time);
@@ -176,11 +180,6 @@
         pictureAuthorName.setAttribute('href', '/users/' + picture.author_id);
         likeCount.innerHTML = picture.like_count;
         
-        for (var i = 0; i < commentList.length; ++i) {
-          commentListHtml += '';
-        }
-        
-        $('#comment-area').append(commentListHtml);
         
         downloadOrigin.setAttribute('href', picture.url);
         downTwoBig.setAttribute('href', picture.url_big_2);
@@ -204,7 +203,9 @@
       error: function (res) {
         console.log(res);
       }
-    })
+    });
+  
+    getCommentList();
     
   })(window, document);
   
@@ -285,8 +286,68 @@
   // 发表评论
   (function (w, d) {
     
+    var publishButton = d.getElementById('publish-button');
+    var commentTextarea = d.getElementById('comment-textarea');
+    publishButton.addEventListener('click', function (event) {
+      event.preventDefault();
+      var token = window.localStorage.getItem('token');
+      
+      if (token) {
+        $.ajaxSetup({
+          headers: {
+            'x-access-token': token
+          }
+        });
+      }
+      $.ajax({
+        method: "POST",
+        url: '/pictures/comment',
+        data: {
+          picture_id: global.pictureId,
+          text: commentTextarea.value
+        },
+        success: function (res) {
+          console.log(res);
+          if (res.success) {
+            getCommentList();
+          }
+        },
+        error: function (res) {
+          console.log(res);
+        }
+      });
+    })
     
   })(window, document);
+  
+  function getCommentList() {
+    var commentAreaJQ = $('#comment-area');
+    
+    $.ajax({
+      method: "POST",
+      url: '/pictures/commentList',
+      data: {
+        picture_id: global.pictureId
+      },
+      success: function (res) {
+        console.log(res);
+        if (res.success) {
+          var commentList = res.data || [];
+          var commentListHtml = '';
+          var commentItemHtml;
+          var i;
+          for (i = 0; i < commentList.length; ++i) {
+            commentItemHtml = '<div class="comment__item"><div class="comment__head"><a class="comment__author-name" href="/users/' + commentList[i].author_id + '">' + commentList[i].author_name + '</a><span class="comment__time">' + formatTime(commentList[i].time) + '</span></div><div class="comment__text">' + commentList[i].text + '</div></div>'
+            commentListHtml += commentItemHtml;
+          }
+          commentAreaJQ.html(commentListHtml);
+        }
+      },
+      error: function (res) {
+        console.log(res);
+      }
+    });
+  }
   
   function formatTime(time) {
     var date = new Date(time);

@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en"><head>
   <meta charset="UTF-8">
   <title>个人中心</title>
   <link rel="stylesheet" href="/css/metro.min.css">
@@ -26,10 +24,24 @@
   <script src="/js/jquery-3.2.1.js"></script>
   <script src="/js/metro.js"></script>
 </head>
-<body>
+<body class="bg-darkGray">
 <div class="grid">
   <div class="row cells12">
     <div class="cell colspan3">
+      <ul class="sidebar2 ">
+        <li class="title">个人中心</li>
+        <li class="active"><a href="#"><span class="mif-file-image icon"></span>我的图片</a></li>
+        <li class="stick bg-red"><a href="#"><span class="mif-bubbles icon"></span>我的话题</a></li>
+        <li class="stick bg-red"><a href="#"><span class="mif-images icon"></span>我的相册</a></li>
+        <li class="stick bg-red"><a href="#"><span class="mif-envelop icon"></span>我的消息</a></li>
+        <li class="stick bg-green">
+          <a class="dropdown-toggle" href="#"><span class="mif-cog icon"></span>个人设置</a>
+          <ul class="d-menu" data-role="dropdown" style="display: none;">
+            <li><a href=""><span class="mif-vpn-lock icon"></span>修改头像</a></li>
+            <li><a href="">修改密码</a></li>
+          </ul>
+        </li>
+      </ul>
       <nav>
         <ul>
           <li id="my-pictures" class="nav__item nav__anchor">
@@ -53,30 +65,30 @@
       </nav>
     </div>
     <div class="cell colspan9">
-      <div id="my-pictures-main" class="main__item">
+      <div id="my-pictures-main" class="main__item" style="display: none;">
       
       </div>
-      <div id="my-topics-main" class="main__item">
+      <div id="my-topics-main" class="main__item" style="display: none;">
       
       </div>
-      <div id="my-topics-albums" class="main__item">
+      <div id="my-topics-albums" class="main__item" style="display: none;">
       
       </div>
-      <div id="change-password-main" class="main__item">
+      <div id="change-password-main" class="main__item" style="display: none;">
         <form action="">
           <div class="input-control text" data-role="input">
             <label for="old_password">旧密码</label>
-            <input id="old_password" name="old_password" type="password">
+            <input id="old_password" name="old_password" type="password" style="padding-right: 5px;">
           </div>
           <br><br>
           <div class="input-control text" data-role="input">
             <label for="new_password">新密码</label>
-            <input id="new_password" name="new_password" type="password">
+            <input id="new_password" name="new_password" type="password" style="padding-right: 5px;">
           </div>
           <br><br>
           <div class="input-control text" data-role="input">
             <label for="new_password_confirm">新密码</label>
-            <input id="new_password_confirm" name="new_password_confirm" type="password">
+            <input id="new_password_confirm" name="new_password_confirm" type="password" style="padding-right: 5px;">
           </div>
           <br><br>
           <div class="form-actions">
@@ -84,11 +96,11 @@
           </div>
         </form>
       </div>
-      <div id="change-avatar-main" class="main__item">
+      <div id="change-avatar-main" class="main__item" style="display: none;">
         <form action="">
           <div class="input-control file" data-role="input">
-            <input id="input-avatar" type="file" accept="image/*">
-            <button class="button"><span class="mif-folder"></span></button>
+            <input id="input-avatar" type="file" accept="image/*" tabindex="-1" style="z-index: 0;"><input type="text" class="input-file-wrapper" readonly="" style="z-index: 1; cursor: default;">
+            <button class="button" type="button"><span class="mif-folder"></span></button>
           </div>
           <div class="form-actions">
             <button id="btn-change-avatar" class="button primary" type="submit">确定修改</button>
@@ -230,5 +242,5 @@
     
   })(window, document);
 </script>
-</body>
-</html>
+
+</body></html>

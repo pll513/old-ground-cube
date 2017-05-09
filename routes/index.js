@@ -109,4 +109,8 @@ router.get('/me', function (req, res, next) {
   res.render('me');
 });
 
+router.get('/me/pictures', function (req, res, next) {
+  
+});
+
 module.exports = router;

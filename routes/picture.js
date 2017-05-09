@@ -76,7 +76,50 @@ router.post('/like', jwtAuth, function (req, res, next) {
   
 });
 
-router.get('/comment', function (req, res, next) {
+router.post('/comment', jwtAuth, function (req, res, next) {
+  
+  var authorId = req.decoded._id;
+  var pictureId = req.body.picture_id;
+  var time = new Date().getTime();
+  var text = req.body.text;
+  console.log(pictureId);
+  
+  MongoClient.connect(mongoUrl, function (err, db) {
+    if (err) return res.json({success: false});
+    db.collection('user').findOne({_id: ObjectID(authorId)}, function (err, user) {
+      if (err) return res.json({success: false});
+      db.collection('picture').updateOne({_id: ObjectID(pictureId)}, {
+        $push: {
+          comments: {
+            author_id: authorId,
+            author_name: user.name,
+            time: time,
+            text: text
+          }
+        }
+      }, function (err, result) {
+        if (err) return res.json({success: false});
+        res.json({success: true, message: '评论成功'});
+        db.close();
+      });
+    });
+    
+  });
+  
+});
+
+router.post('/commentList', function (req, res, next) {
+  
+  var pictureId = req.body.picture_id;
+  
+  MongoClient.connect(mongoUrl, function (err, db) {
+    if (err) return res.json({success: false});
+    db.collection('picture').findOne({_id: ObjectID(pictureId)}, function (err, picture) {
+      if (err) return res.json({success: false});
+      res.json({success: true, data: picture.comments});
+    });
+    
+  });
   
 });
 
@@ -87,6 +130,9 @@ router.post('/pictureList', function (req, res, next) {
   var pageSize = parseInt(req.body.pageSize) || 24;
   var skip = (pageIndex - 1) * pageSize;
   var limit = pageSize;
+  console.log(category);
+  console.log(skip);
+  console.log(limit);
   MongoClient.connect(mongoUrl, function (err, db) {
     if (err) return res.json({success: false, message: err});
     db.collection('picture').find({category: category}, {

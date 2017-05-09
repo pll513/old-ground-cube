@@ -9,38 +9,85 @@
   <link rel="stylesheet" href="/css/metro-rtl.min.css">
   <link rel="stylesheet" href="/css/metro-schemes.min.css">
   <style>
-    .topic .topic__img {
+    .topic {
+      width: 800px;
+      margin: 200px auto;
+      background-color: #fff;
+      opacity: 0;
+      -webkit-transform: scale(.8);
+      transform: scale(.8);
+    }
+    
+    #topic-list:before, #topic-list:after {
+      content: " ";
+      display: table;
+      clear: both;
+    }
+    
+    .topic__item {
+      margin-bottom: 20px;
+      width: 100%;
+      height: 120px;
+      display: block;
+      float: left;
+      position: relative;
+      background: rgb(247, 246, 244);
+    }
+    
+    .topic__item:hover {
+      cursor: pointer;
+    }
+    
+    /*.topic__item:before, .topic__item:after {*/
+    /*content: " ";*/
+    /*display: table;*/
+    /*clear: both;*/
+    /*}*/
+    
+    .topic__info {
+      position: absolute;
+      left: 120px;
+      top: 10px;
+      width: 500px;
+    }
+    
+    .topic__time {
+      float: left;
+      color: #888;
+      font-size: 14px;
+      margin-left: 20px;
+    }
+    
+    .topic__image {
       position: absolute;
       left: 10px;
       top: 10px;
+      width: 100px;
+      height: 100px;
+      background-size: cover;
+      background-position: center;
     }
     
-    .topic .topic__desc {
-      margin: 10px 0 0;
+    .topic__desc {
       position: absolute;
+      top: 50px;
+      left: 120px;
+      width: 600px;
       max-height: 64px;
       text-align: justify;
-      left: 100px;
-      right: 10px;
-      top: 10px;
+      color: #555;
+      overflow: hidden;
     }
     
-    .topic .topic__author {
-      position: absolute;
-      left: 10px;
-      top: 100px;
+    .topic__author {
+      float: left;
     }
     
-    .topic .topic__comment {
-      position: absolute;
-      right: 10px;
-      top: 100px;
-    }
-    
-    .main {
-      /*width: 1200px;*/
-      /*margin: auto;*/
-      background: #fff;
+    .topic__comment {
+      float: left;
+      font-size: 14px;
+      color: #888;
+      margin-left: 15px;
     }
     
     #form-publish-topic {
@@ -90,44 +137,52 @@
       background: #2086bf;
       color: #fff;
     }
+    
+    #picture-preview {
+      padding: 10px 0 10px 10px;
+    }
+    
+    #picture-preview:before, #picture-preview:after {
+      content: " ";
+      display: table;
+      clear: both;
+    }
+    
+    .img-preview__item {
+      float: left;
+      margin-right: 10px;
+      width: 100px;
+      height: 100px;
+      background-size: cover;
+      background-position: center;
+    }
+  
   </style>
   <script src="/js/jquery-3.2.1.js"></script>
   <script src="/js/metro.js"></script>
 </head>
-<body>
-<div class="container">
-  <header class="margin20 no-margin-left no-margin-right">
-    <div class="clear-float">
-      <div class="place-right">
-        <form>
-          <div class="input-control text margin20" style="width: 300px">
-            <input type="text" name="q" placeholder="搜索话题...">
-            <button class="button"><span class="mif-search"></span></button>
-          </div>
-        </form>
-      </div>
-      <a class="place-left" href="#" title="">
-        <h1>话题</h1>
-      </a>
+<body class="bg-darkerGray">
+<div style="opacity: 1;transform: scale(1);transition: 0.5s;" class="topic padding20 block-shadow">
+  <h1 class="text-light">话题</h1>
+  <hr class="thin">
+  <h3 class="text-light">发布话题</h3>
+  <hr class="thin">
+  <form id="form-publish-topic" action="" enctype="multipart/form-data">
+    <div class="input-control textarea">
+      <textarea name="topic_text" id="topic_text" rows="3"></textarea>
     </div>
-  
-  </header>
-  <main class="main">
-    <form id="form-publish-topic" action="" enctype="multipart/form-data">
-      <div class="input-control textarea">
-        <textarea name="topic_text" id="topic_text" rows="3"></textarea>
-      </div>
-      <input id="upload-file" name="topic_pictures" type="file" multiple="multiple" accept="image/*">
-      <button id="upload-image"><span class="mif-images"></span></button>
-      <input id="button-publish" type="submit" value="发表">
-      <div id="picture-preview">
-      
-      </div>
-    </form>
-    <div id="topic-list">
+    <input id="upload-file" name="topic_pictures" type="file" multiple="multiple" accept="image/*">
+    <button id="upload-image"><span class="mif-images"></span></button>
+    <input id="button-publish" type="submit" value="发表">
+    <div id="picture-preview">
     
     </div>
-  </main>
+  </form>
+  <h3 class="text-light">话题列表</h3>
+  <hr class="thin">
+  <div id="topic-list">
+  
+  </div>
 
 </div>
 <script>
@@ -175,11 +230,11 @@
           var picturePreviewFragment = d.createDocumentFragment();
           var imgHtml;
           picturePreviewJQ.empty();
+          
           for (var i = 0; i < imgUrls.length; ++i) {
-            imgHtml = d.createElement('img');
-            imgHtml.setAttribute('src', imgUrls[i]);
-            imgHtml.setAttribute('width', '100');
-            imgHtml.setAttribute('height', '100');
+            imgHtml = d.createElement('div');
+            imgHtml.setAttribute('class', 'img-preview__item');
+            imgHtml.setAttribute('style', 'background-image:url(' + imgUrls[i] + ');');
             picturePreviewFragment.appendChild(imgHtml);
           }
           picturePreview.appendChild(picturePreviewFragment);
@@ -218,6 +273,9 @@
           },
           success: function (res) {
             console.log(res);
+            if (res.success) {
+              w.location.href = w.location.origin + '/topics';
+            }
           },
           error: function (res) {
             console.log(res);
@@ -233,6 +291,7 @@
   (function (w, d) {
     
     var divTopicList = d.getElementById('topic-list');
+    var divTopicListJQ = $(divTopicList);
     
     
     $.ajax({
@@ -246,40 +305,24 @@
       success: function (res) {
         console.log(res);
         var topicList = res.data;
+        var topicListHtml = '';
+        var topicItemHtml;
         
-        // 话题列表渲染
-        var topicListFragment = d.createDocumentFragment();
         for (var i = 0; i < topicList.length; ++i) {
-          var topic = d.createElement('a');
-          var topicInfo = d.createElement('div');
-          var topicAuthor = d.createElement('a');
-          var topicTime = d.createElement('span');
-          var topicComment = d.createElement('span');
-          var topicImage = d.createElement('div');
-          var topicDesc = d.createElement('div');
-          topic.setAttribute('class', 'topic__item');
-          topic.setAttribute('href', '/topics/' + topicList[i]._id);
-          topicInfo.setAttribute('class', 'topic__info');
-          topicAuthor.setAttribute('class', 'topic__author');
-          topicTime.setAttribute('class', 'topic__time');
-          topicComment.setAttribute('class', 'topic__comment');
-          topicImage.setAttribute('class', 'topic__image');
-          topicDesc.setAttribute('class', 'topic__desc');
-          topicAuthor.innerHTML = topicList[i].author_name;
-          topicAuthor.setAttribute('href', '/users/' + topicList[i].author_id);
-          topicTime.innerHTML = topicList[i].time;  //格式需要修改
-          topicComment.innerHTML = topicList[i].comment_count;
-          topicComment.setAttribute('style', 'background-image:url("' + topicList[i].images[0] + '");');
-          topicDesc.innerHTML = topicList[i].text;
-          topicInfo.appendChild(topicAuthor);
-          topicInfo.appendChild(topicTime);
-          topicInfo.appendChild(topicComment);
-          topic.appendChild(topicInfo);
-          topic.appendChild(topicImage);
-          topic.appendChild(topicDesc);
-          topicListFragment.appendChild(topic);
+          topicItemHtml = '<div class="topic__item" data-url="' +
+              '/topics/' + topicList[i]._id +
+              '"><div class="topic__image" style="background-image:url(' + topicList[i].images[0] +
+              ');"></div><div class="topic__info"><a class="topic__author" href="/users/' +
+              topicList[i].author_id + '">' + topicList[i].author_name +
+              '</a><span class="topic__time">' + formatTime(topicList[i].time) +
+              '</span> <div class="topic__comment">已有<span class="topic__comment-count">' + topicList[i].comment_count +
+              '</span>人参与讨论</div> </div><div class="topic__desc">' + topicList[i].text +
+              '</div></div>';
+          topicListHtml += topicItemHtml;
         }
-        divTopicList.appendChild(topicListFragment);
+        
+        divTopicListJQ.append(topicListHtml);
+        
       },
       error: function (res) {
         console.log(res);
@@ -287,5 +330,30 @@
     });
     
   })(window, document);
+  
+  (function (w, d) {
+    
+    var topicList = d.getElementById('topic-list');
+    topicList.addEventListener('click', function (event) {
+      event.preventDefault();
+      var target = event.target;
+      if (~target.className.indexOf('topic__item')) {
+        w.location.href = w.location.origin + target.getAttribute('data-url');
+      }
+    });
+    
+  })(window, document);
+  
+  function formatTime(time) {
+    var date = new Date(time);
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+    var hour = date.getHours();
+    var minute = date.getMinutes();
+    var minuteStr = minute < 10 ? '0' + minute : '' + minute;
+    return year + '/' + month + '/' + day + ' ' + hour + ':' + minuteStr;
+  }
+
 </script>
 </body>

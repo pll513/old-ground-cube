@@ -10,15 +10,99 @@
   <link rel="stylesheet" href="/css/metro-rtl.min.css">
   <link rel="stylesheet" href="/css/metro-schemes.min.css">
   <style>
+    .textarea {
+      width: 100%;
+    }
+    #textarea-comment {
+      width: 100%;
+    }
+    #topic-image {
+      padding: 10px 0 10px 10px;
+    }
+    #topic-image:before,#topic-image:after {
+      content: " ";
+      display: table;
+      clear: both;
+    }
+    .topic-image__item {
+      background-size: cover;
+      background-position: center;
+      width: 352px;
+      height: 198px;
+      float: left;
+      margin-right: 10px;
+    }
+
+    #topic-info {
+      margin-left: 10px;
+    }
+    #topic-info:before, #topic-info:after {
+      display: table;
+      content: " ";
+      clear: both;
+    }
+    
+    #topic-info > span, #topic-info > a, #topic-info > div {
+      float: left;
+    }
+    
+    #topic-info > span {
+      color: #888;
+      font-size: 14px;
+      line-height: 60px;
+      height: 60px;
+    }
+    
+    #author-avatar {
+      float: left;
+      width: 60px;
+      height: 60px;
+      background-size: cover;
+      background-position: center;
+    }
+    
+    #author-name {
+      margin-left: 20px;
+      margin-right: 10px;
+      float: left;
+      line-height: 60px;
+      height: 60px;
+    }
+    
+    #topic-time {
+      margin-left: 10px;
+      float: left;
+    }
+    
+    #topic-text {
+      padding: 10px;
+      line-height: 20px;
+      color: #555;
+      font-size: 16px;
+    }
+    
+    .topic {
+      width: 800px;
+      margin: 200px auto;
+      background-color: #fff;
+      opacity: 0;
+      -webkit-transform: scale(.8);
+      transform: scale(.8);
+    }
+    
     .comment {
       clear: both;
-      margin: 10px 0;
+      margin: 10px 0 0 50px;
     }
     
     .comment:before, .comment:after {
       display: table;
       content: " ";
       clear: both;
+    }
+    
+    .reply__time {
+      color: #888;
     }
     
     .comment__info {
@@ -58,9 +142,11 @@
       width: 500px;
       padding: 10px;
       min-height: 50px;
+      color: #555;
     }
     
     .comment__extra {
+      z-index: 9;
       position: relative;
       width: 100%;
       height: 50px;
@@ -71,8 +157,11 @@
     .comment__time {
       height: 50px;
       line-height: 50px;
+      color: #888;
     }
-    
+    textarea {
+      resize: none;
+    }
     .comment__button {
       /*float: right;*/
       border: 0;
@@ -84,13 +173,13 @@
     
     .reply-form {
       position: absolute;
-      right: -350px;
+      top: -30px;
+      right: -320px;
       bottom: 0;
       width: 320px;
-      background: #1ba1e2;
       padding: 10px;
     }
-    
+ 
     .reply-form:before, .reply-form:after {
       display: table;
       content: "";
@@ -98,18 +187,28 @@
     }
     
     #reply-textarea {
+      position: absolute;
+      left: 0;
+      top: 0;
       clear: both;
       float: left;
       margin-bottom: 10px;
       padding: 10px;
       width: 300px;
+      height: 80px;
       outline: 0;
+      border: 1px solid #d9d9d9;
+    }
+    #reply-textarea:focus {
+      border: 1px solid #777;
     }
     
     #reply-submit {
-      float: left;
+      position: absolute;
+      left: 300px;
+      top: 0;
       width: 80px;
-      height: 30px;
+      height: 80px;
       background: #1b6eae;
       color: #fff;
       border: 0;
@@ -121,16 +220,19 @@
     }
     
     .reply__item {
+      padding: 10px;
       background: #f6f6f6;
       margin-bottom: 5px;
     }
     
     .reply__reply {
       margin: 0 10px;
+      color: #888;
     }
     
     .reply__text {
       padding: 10px 0;
+      color: #555;
     }
     
     .reply__extra {
@@ -146,55 +248,42 @@
       background: transparent;
       color: #1b6eae;
     }
+    .f-none {
+      visibility: hidden;
+    }
   </style>
   <script src="/js/jquery-3.2.1.js"></script>
   <script src="/js/metro.js"></script>
 </head>
-<body>
-<div class="container">
-  <header class="margin20 no-margin-left no-margin-right">
-    <div class="clear-float">
-      <div class="place-right">
-        <form>
-          <div class="input-control text margin20" style="width: 300px">
-            <input type="text" name="q" placeholder="搜索话题...">
-            <button class="button"><span class="mif-search"></span></button>
-          </div>
-        </form>
-      </div>
-      <a class="place-left" href="#" title="">
-        <h1>话题详情</h1>
-      </a>
+<body class="bg-darkerGray">
+<div style="opacity: 1;transform: scale(1);transition: 0.5s;" class="topic padding20 block-shadow">
+  <h1 class="text-light">话题详情</h1>
+  <hr class="thin">
+  <div id="topic-info">
+  
+  </div>
+  <div id="topic-image">
+  
+  </div>
+  <div id="topic-text">
+  
+  </div>
+  <h3 class="text-light">发表评论</h3>
+  <hr class="thin">
+  <form class="form-comment" action="">
+    <div class="input-control textarea">
+      <textarea id="textarea-comment"></textarea>
     </div>
-  </header>
-  <main>
-    <div id="topic-detail">
-      <div>
-        <img id="author-avatar" src="" alt="">
-        <div id="author-name">作者昵称</div>
-        <div id="topic-time">发布时间</div>
-      </div>
-      <div id="topic-image">
-      
-      </div>
-      <div id="topic-text">
-      
-      </div>
-      <div id="topic-comment">
-      
-      </div>
+    <br>
+    <div class="form-actions">
+      <button id="btn-submit-comment" type="submit" class="button primary">评论</button>
     </div>
-    
-    <form class="form-comment" action="">
-      <div class="input-control textarea">
-        <textarea id="textarea-comment"></textarea>
-      </div>
-      <br><br>
-      <div class="form-actions">
-        <button id="btn-submit-comment" type="submit">评论</button>
-      </div>
-    </form>
-  </main>
+  </form>
+  <h3 class="text-light">评论区</h3>
+  <hr class="thin">
+  <div id="topic-comment">
+  
+  </div>
 </div>
 <script>
   var global = {};
@@ -211,9 +300,13 @@
     var topicTime = d.getElementById('topic-time');
     var topicAuthorName = d.getElementById('author-name');
     var topicAuthorAvatar = d.getElementById('author-avatar');
-    var topicImage = d.getElementById('topic-image');
-    var topicText = d.getElementById('topic-text');
-    var topicComment = d.getElementById('topic-comment');
+    var topicInfoJQ = $('#topic-info');
+    var topicImageListJQ = $('#topic-image');
+    var topicTextJQ = $('#topic-text');
+    
+    var topicInfoHtml = '';
+    var topicImageListHtml = '';
+//    var topicCommentListHtml;
     
     $.ajax({
       method: 'POST',
@@ -226,23 +319,163 @@
         var topicDetail = res.data;
         var i, j;
         
-        // 话题详情主体
-        var topicImageList = topicDetail.images;
-        var topicImageListFragment = d.createDocumentFragment();
-        topicTime.innerHTML = formatTime(topicDetail.time);
-        topicAuthorName.innerHTML = topicDetail.author_name;
-        topicAuthorAvatar.setAttribute('src', topicDetail.author_avatar);
-        topicText.innerHTML = topicDetail.text;
+        topicInfoHtml = '<div id="author-avatar" style="background-image: url(' + topicDetail.author_avatar +
+            ')"></div><a id="author-name" href="'+ '/users/' + topicDetail.author_id +'">' + topicDetail.author_name +
+            '</a><span>发表于</span><span id="topic-time">' + formatTime(topicDetail.time) +
+            '</span>';
+        topicInfoJQ.append(topicInfoHtml);
+        
+        var topicImageList = topicDetail.images || [];
+//        var topicImageListFragment = d.createDocumentFragment();
+//        topicTime.innerHTML = formatTime(topicDetail.time);
+//        topicAuthorName.innerHTML = topicDetail.author_name;
+//        topicAuthorAvatar.setAttribute('src', topicDetail.author_avatar);
+//        topicText.innerHTML = topicDetail.text;
         for (i = 0; i < topicImageList.length; ++i) {
-          var img = d.createElement('img');
-          img.setAttribute('src', topicImageList[i]);
-          topicImageListFragment.appendChild(img);
+          topicImageListHtml += '<div class="topic-image__item" style="background-image: url(' + topicImageList[i] + ')"></div>';
         }
-        topicImage.appendChild(topicImageListFragment);
+        topicImageListJQ.append(topicImageListHtml);
+        topicTextJQ.append(topicDetail.text);
         
+      },
+      error: function (res) {
+        console.log(res);
+      }
+    });
+  
+    getCommentList();
+    
+  })(window, document);
+  
+  // 评论
+  (function (w, d) {
+    
+    var btnSubmitComment = d.getElementById('btn-submit-comment');
+    var textareaComment = d.getElementById('textarea-comment');
+    var commentAreaJQ = $('#topic-comment');
+    
+    btnSubmitComment.addEventListener('click', function (event) {
+      event.preventDefault();
+      var token = window.localStorage.getItem('token');
+      if (token) {
+        $.ajaxSetup({
+          headers: {
+            'x-access-token': token
+          }
+        });
+      }
+      $.ajax({
+        method: 'POST',
+        url: '/topics/comment',
+        data: {
+          topic_id: global.topicId,
+          comment_text: textareaComment.value
+        },
+        success: function (res) {
+          console.log(res);
+          if (res.success) {
+            commentAreaJQ.empty();
+            global.replyTextarea.value = '';
+            getCommentList();
+          }
+        },
+        error: function (res) {
+          console.log(res);
+        }
+      });
+    });
+    
+  })(window, document);
+  
+  // 回复
+  (function (w, d) {
+    
+    var reply = d.createElement('form');
+    var replyTextarea = d.createElement('textarea');
+    global.replyTextarea = replyTextarea;
+    var replySubmit = d.createElement('button');
+    var commentAreaJQ = $('#topic-comment');
+    replyTextarea.setAttribute('id', 'reply-textarea');
+    replySubmit.setAttribute('id', 'reply-submit');
+    replySubmit.innerHTML = '回复';
+    reply.setAttribute('class', 'reply-form');
+    reply.appendChild(replyTextarea);
+    reply.appendChild(replySubmit);
+    
+    d.body.addEventListener('click', function (event) {
+      var className = event.target.className;
+      var id = event.target.id;
+      if (~className.indexOf('comment__button') || ~className.indexOf('reply__button')) {
+        var replyInfo = event.target.parentNode;
+        replySubmit.setAttribute('data-to_id', event.target.getAttribute('data-to_id'));
+        replySubmit.setAttribute('data-to_name', event.target.getAttribute('data-to_name'));
+        replySubmit.setAttribute('data-comment_id', event.target.getAttribute('data-comment_id'));
+        replyInfo.appendChild(reply);
+        $(global.replyTextarea.parentNode).removeClass('f-none');
+      } else if (id === 'reply-submit') {
+        event.preventDefault();
+        var toId = event.target.getAttribute('data-to_id');
+        var toName = event.target.getAttribute('data-to_name');
+        var commentId = event.target.getAttribute('data-comment_id');
+        var text = d.getElementById('reply-textarea').value;
+        var token = window.localStorage.getItem('token');
+        if (token) {
+          $.ajaxSetup({
+            headers: {
+              'x-access-token': token
+            }
+          });
+        }
+        $.ajax({
+          method: 'POST',
+          url: '/topics/reply',
+          data: {
+            topic_id: global.topicId,
+            comment_id: commentId,
+            to_id: toId,
+            to_name: toName,
+            reply_text: text
+          },
+          success: function (res) {
+            console.log(res);
+            if (res.success) {
+              commentAreaJQ.empty();
+              global.replyTextarea.value = '';
+              getCommentList();
+            }
+          },
+          error: function (res) {
+            console.log(res);
+          }
+        });
+      } else if (id === 'reply-textarea') {
         
+      } else {
+        $(global.replyTextarea.parentNode).addClass('f-none');
+      }
+    });
+    
+  })(window, document);
+  
+  function getCommentList(pageIndex, pageSize) {
+    var d = document;
+    pageIndex = pageIndex || 1;
+    pageSize = pageSize || 10;
+    var topicComment = d.getElementById('topic-comment');
+    $.ajax({
+      method: 'POST',
+      url: '/topics/topicComment',
+      data: {
+        topic_id: global.topicId,
+        page_index: pageIndex,
+        page_size: pageSize
+      },
+      success: function (res) {
+        console.log(res);
+        var commentList = res.data || [];
+        var i, j;
+      
         // 话题评论
-        var commentList = topicDetail.comments || [];
         var commentListFragment = d.createDocumentFragment();
         for (i = 0; i < commentList.length; ++i) {
           var first = commentList[i].first;
@@ -298,7 +531,7 @@
             reply.appendChild(replyExtra);
             commentReply.appendChild(reply);
           }
-          
+        
           commentAuthor.setAttribute('href', '/users/' + first.author_id);
           commentAuthor.setAttribute('class', 'comment__author');
           commentAuthor.innerHTML = first.author_name;
@@ -336,99 +569,7 @@
       }
     });
     
-  })(window, document);
-  
-  // 评论
-  (function (w, d) {
-    
-    var btnSubmitComment = d.getElementById('btn-submit-comment');
-    var textareaComment = d.getElementById('textarea-comment');
-    
-    btnSubmitComment.addEventListener('click', function (event) {
-      event.preventDefault();
-      var token = window.localStorage.getItem('token');
-      if (token) {
-        $.ajaxSetup({
-          headers: {
-            'x-access-token': token
-          }
-        });
-      }
-      $.ajax({
-        method: 'POST',
-        url: '/topics/comment',
-        data: {
-          topic_id: global.topicId,
-          comment_text: textareaComment.value
-        },
-        success: function (res) {
-          console.log(res);
-        },
-        error: function (res) {
-          console.log(res);
-        }
-      });
-    });
-    
-  })(window, document);
-  
-  // 回复
-  (function (w, d) {
-    
-    var reply = d.createElement('form');
-    var replyTextarea = d.createElement('textarea');
-    var replySubmit = d.createElement('button');
-    replyTextarea.setAttribute('id', 'reply-textarea');
-    replySubmit.setAttribute('id', 'reply-submit');
-    replySubmit.innerHTML = '回复';
-    reply.setAttribute('class', 'reply-form');
-    reply.appendChild(replyTextarea);
-    reply.appendChild(replySubmit);
-    
-    d.body.addEventListener('click', function (event) {
-      var className = event.target.className;
-      var id = event.target.id;
-      if (~className.indexOf('comment__button') || ~className.indexOf('reply__button')) {
-        var replyInfo = event.target.parentNode;
-        replySubmit.setAttribute('data-to_id', event.target.getAttribute('data-to_id'));
-        replySubmit.setAttribute('data-to_name', event.target.getAttribute('data-to_name'));
-        replySubmit.setAttribute('data-comment_id', event.target.getAttribute('data-comment_id'));
-        replyInfo.appendChild(reply);
-      } else if (id === 'reply-submit') {
-        event.preventDefault();
-        var toId = event.target.getAttribute('data-to_id');
-        var toName = event.target.getAttribute('data-to_name');
-        var commentId = event.target.getAttribute('data-comment_id');
-        var text = d.getElementById('reply-textarea').value;
-        var token = window.localStorage.getItem('token');
-        if (token) {
-          $.ajaxSetup({
-            headers: {
-              'x-access-token': token
-            }
-          });
-        }
-        $.ajax({
-          method: 'POST',
-          url: '/topics/reply',
-          data: {
-            topic_id: global.topicId,
-            comment_id: commentId,
-            to_id: toId,
-            to_name: toName,
-            reply_text: text
-          },
-          success: function (res) {
-            console.log(res);
-          },
-          error: function (res) {
-            console.log(res);
-          }
-        });
-      }
-    });
-    
-  })(window, document);
+  }
   
   function formatTime(time) {
     var date = new Date(time);
