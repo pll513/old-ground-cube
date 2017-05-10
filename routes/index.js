@@ -92,7 +92,11 @@ router.post('/register', function (req, res, next) {
         if (result) {
           res.send({status: 1, msg: '该账号已被注册'});
         } else {
-          db.collection('user').insertOne({name: userName, password: userPassword}, function (err, result) {
+          db.collection('user').insertOne({
+            name: userName,
+            password: userPassword,
+            avatar: '/images/avatar/default.jpg'
+          }, function (err, result) {
             assert.equal(null, err);
             res.send({status: 0, msg: '注册成功'});
           });
@@ -103,14 +107,6 @@ router.post('/register', function (req, res, next) {
   } else {
     res.send({status: 1});
   }
-});
-
-router.get('/me', function (req, res, next) {
-  res.render('me');
-});
-
-router.get('/me/pictures', function (req, res, next) {
-  
 });
 
 module.exports = router;

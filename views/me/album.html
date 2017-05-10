@@ -1,0 +1,244 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>个人中心</title>
+  <link rel="stylesheet" href="/css/metro.min.css">
+  <link rel="stylesheet" href="/css/metro-colors.min.css">
+  <link rel="stylesheet" href="/css/metro-icons.min.css">
+  <link rel="stylesheet" href="/css/metro-responsive.min.css">
+  <link rel="stylesheet" href="/css/metro-rtl.min.css">
+  <link rel="stylesheet" href="/css/metro-schemes.min.css">
+  <script src="/js/jquery-3.2.1.js"></script>
+  <script src="/js/metro.js"></script>
+  <style>
+    .sidebar2 {
+      margin-left: 100px;
+    }
+    
+    .main {
+      width: 800px;
+      margin: 100px auto auto 400px;
+      background-color: #fff;
+      opacity: 0;
+      -webkit-transform: scale(.8);
+      transform: scale(.8);
+    }
+    
+    #album-list {
+      padding: 10px 0 0 0;
+    }
+    
+    #album-list:after {
+      content: " ";
+      display: table;
+      clear: both;
+    }
+    
+    .album-item {
+      float: left;
+      margin: 0 10px 10px 0;
+    }
+    
+    .album-item__image {
+      width: 160px;
+      height: 90px;
+      background-size: cover;
+      background-position: center;
+    }
+    
+    .album-item__name {
+      
+    }
+    
+    .album-item__info {
+      
+    }
+    
+    .album-item__time {
+      
+    }
+    
+    .album-item__type {
+      
+    }
+    
+    .create-album {
+      position: relative;
+    }
+    
+    #form-create-album {
+      position: absolute;
+      left: 150px;
+      top: -3px;
+      font-size: 0;
+    }
+    
+    #form-create-album > .input-control {
+      width: 240px;
+      font-size: 14px;
+    }
+    
+    #button-create-album {
+      
+    }
+    
+    .f-none {
+      display: none;
+    }
+  </style>
+</head>
+<body class="bg-darkGray">
+<ul class="sidebar2">
+  <li class="title">个人中心</li>
+  <li><a href="/me/pictures"><span class="mif-file-image icon"></span>我的图片</a></li>
+  <li><a href="/me/topics"><span class="mif-bubbles icon"></span>我的话题</a></li>
+  <li class="active"><a href="/me/albums"><span class="mif-images icon"></span>我的相册</a></li>
+  <li><a href="/me/messages"><span class="mif-envelop icon"></span>我的消息</a></li>
+  <li>
+    <a class="dropdown-toggle" href="#"><span class="mif-cog icon"></span>个人设置</a>
+    <ul class="d-menu" data-role="dropdown" style="display: none;">
+      <li><a href="/me/settings/change-avatar">修改头像</a></li>
+      <li><a href="/me/settings/change-pass">修改密码</a></li>
+    </ul>
+  </li>
+</ul>
+<main style="opacity: 1;transform: scale(1);transition: 0.5s;" class="main padding20 block-shadow">
+  <h1 class="text-light">我的相册</h1>
+  <hr class="thin">
+  <br>
+  <div class="create-album">
+    <button id="button-new-album" class="button success"><span class="mif-plus icon"></span> 创建相册</button>
+    <form id="form-create-album" class="f-none" action="">
+      <div class="input-control text">
+        <input type="text" id="input-album-name" name="album_name" placeholder="请输入新相册名称...">
+      </div>
+      <button id="button-create-album" class="button primary"><span class="icon mif-checkmark"></span></button>
+    </form>
+  </div>
+  <div id="album-list">
+    
+  </div>
+</main>
+<script>
+  
+  (function (w, d) {
+    
+    var albumListJQ = $('#album-list');
+    var albumListHtml = '';
+    var token = window.localStorage.getItem('token');
+    if (token) {
+      $.ajaxSetup({
+        headers: {
+          'x-access-token': token
+        }
+      });
+    }
+    $.ajax({
+      method: 'POST',
+      url: '/albums/albumList',
+      success: function (res) {
+        console.log(res);
+        var albumList = res.data || [];
+        var i;
+        for (i = 0; i < albumList.length; ++i) {
+          var imgUrl;
+          if (albumList[i].pages && albumList[i].pages[0]) {
+            imgUrl = albumList[i].pages[0].img_url;
+          } else {
+            imgUrl = '/images/album/default.jpg';
+          }
+          var typeTxt = albumList[i].type == 1 ? '私有' : '公开';
+          albumListHtml += '<a class="album-item" href="/me/albums/' + albumList[i].id +
+              '"><div class="album-item__image" style="background-image: url(' + imgUrl +
+              ');"></div><div class="album-item__name">' + albumList[i].name +
+              '</div><div class="album-item__info"><span class="album-item__time">上次修改 ' + formatTime2(albumList[i].time) +
+              '</span><span class="album-item__type">' + typeTxt +
+              '</span></div></a>';
+        }
+        albumListJQ.append(albumListHtml);
+      },
+      error: function (res) {
+        console.log(res);
+      }
+    })
+    
+    
+  })(window, document);
+  
+  (function (w, d) {
+    var buttonNewAlbum = d.getElementById('button-new-album');
+    var buttonCreateAlbum = d.getElementById('button-create-album');
+    var formCreateAlbumJQ = $('#form-create-album');
+    var inputAlbumName = d.getElementById('input-album-name');
+    var input
+    buttonNewAlbum.addEventListener('click', function (event) {
+      event.preventDefault();
+      formCreateAlbumJQ.toggleClass('f-none');
+    });
+    buttonCreateAlbum.addEventListener('click', function (event) {
+      event.preventDefault();
+      if (inputAlbumName.value === '') {
+        $.Notify({
+          caption: '创建相册失败',
+          content: '相册名不能为空',
+          type: 'warning'
+        });
+        return;
+      }
+      var token = window.localStorage.getItem('token');
+      if (token) {
+        $.ajaxSetup({
+          headers: {
+            'x-access-token': token
+          }
+        });
+      }
+      $.ajax({
+        method: 'POST',
+        url: '/albums/create',
+        data: {
+          album_name: inputAlbumName.value
+        },
+        success: function (res) {
+          console.log(res);
+          if (res.success) {
+            console.log('success');
+            $.Notify({
+              caption: '操作成功',
+              content: '创建相册成功',
+              type: 'success'
+            });
+            setTimeout(function () {
+              w.location.href = w.location.origin + '/me/albums/' + res.data.id;
+            }, 2000);
+          } else {
+            $.Notify({
+              caption: '操作失败',
+              content: res.message,
+              type: 'warning'
+            });
+          }
+        }
+      })
+    });
+  })(window, document);
+  
+  function formatTime(time) {
+    var date = new Date(time);
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+    var hour = date.getHours();
+    var minute = date.getMinutes();
+    var minuteStr = minute < 10 ? '0' + minute : '' + minute;
+    return year + '/' + month + '/' + day + ' ' + hour + ':' + minuteStr;
+  }
+  function formatTime2(time) {
+    var date = new Date(time);
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+    return year + '/' + month + '/' + day;
+  }
+</script>
+</body>

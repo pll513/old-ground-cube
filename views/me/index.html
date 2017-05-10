@@ -8,23 +8,38 @@
   <link rel="stylesheet" href="/css/metro-rtl.min.css">
   <link rel="stylesheet" href="/css/metro-schemes.min.css">
   <style>
-    .nav__item {
-      list-style: none;
+    .main {
+      margin: 100px auto auto 300px;
+      background-color: #fff;
+      opacity: 0;
+      -webkit-transform: scale(.8);
+      transform: scale(.8);
     }
-    
-    .nav__anchor {
-      
-    }
-    
-    .nav__anchor:hover {
-      cursor: pointer;
-    }
-  
   </style>
   <script src="/js/jquery-3.2.1.js"></script>
   <script src="/js/metro.js"></script>
 </head>
 <body class="bg-darkGray">
+<ul class="sidebar2">
+  <li class="title">个人中心</li>
+  <li class="active"><a href="#"><span class="mif-file-image icon"></span>我的图片</a></li>
+  <li class="stick bg-red"><a href="#"><span class="mif-bubbles icon"></span>我的话题</a></li>
+  <li class="stick bg-red"><a href="#"><span class="mif-images icon"></span>我的相册</a></li>
+  <li class="stick bg-red"><a href="#"><span class="mif-envelop icon"></span>我的消息</a></li>
+  <li class="stick bg-green">
+    <a class="dropdown-toggle" href="#"><span class="mif-cog icon"></span>个人设置</a>
+    <ul class="d-menu" data-role="dropdown" style="display: none;">
+      <li><a href=""><span class="mif-vpn-lock icon"></span>修改头像</a></li>
+      <li><a href="">修改密码</a></li>
+    </ul>
+  </li>
+</ul>
+<main style="opacity: 1;transform: scale(1);transition: 0.5s;" class="main padding20 block-shadow">
+  <h1 class="text-light">个人中心</h1>
+  <hr class="thin">
+  <br>
+
+</main>
 <div class="grid">
   <div class="row cells12">
     <div class="cell colspan3">
@@ -42,6 +57,12 @@
           </ul>
         </li>
       </ul>
+      <main style="opacity: 1;transform: scale(1);transition: 0.5s;" class="main padding20 block-shadow">
+        <h1 class="text-light">个人中心</h1>
+        <hr class="thin">
+        <br>
+  
+      </main>
       <nav>
         <ul>
           <li id="my-pictures" class="nav__item nav__anchor">
@@ -167,80 +188,7 @@
     
   })(window, document);
   
-  // 修改头像
-  (function (w, d) {
-    
-    var btnChangeAvatar = d.getElementById('btn-change-avatar');
-    var inputAvatar = d.getElementById('input-avatar');
-    btnChangeAvatar.addEventListener('click', function (event) {
-      event.preventDefault();
-      if (inputAvatar.files.length > 0) {
-        var formData = new FormData();
-        var token = window.localStorage.getItem('token');
-        if (token) {
-          $.ajaxSetup({
-            headers: {
-              'x-access-token': token
-            }
-          });
-        }
-        formData.append('avatar', inputAvatar.files[0]);
-        $.ajax({
-          url: "/users/changeAvatar",
-          type: "POST",
-          data: formData,
-          contentType: false,
-          processData: false,
-          success: function (res) {
-            console.log(res);
-          },
-          error: function (res) {
-            console.log(res);
-          }
-        });
-      }
-    });
-    
-  })(window, document);
   
-  // 修改密码
-  (function (w, d) {
-    
-    var inputOldPassword = d.getElementById('old_password');
-    var inputNewPassword = d.getElementById('new_password');
-    var inputNewPasswordConfirm = d.getElementById('new_password_confirm');
-    var btnChangePassword = d.getElementById('btn-change-password');
-    
-    btnChangePassword.addEventListener('click', function (event) {
-      event.preventDefault();
-      var token = window.localStorage.getItem('token');
-      if (token) {
-        $.ajaxSetup({
-          headers: {
-            'x-access-token': token
-          }
-        });
-      }
-      $.ajax({
-        method: 'POST',
-        url: '/users/changePassword',
-        data: {
-          old_password: inputOldPassword.value,
-          new_password: inputNewPassword.value,
-          new_password_confirm: inputNewPasswordConfirm.value
-        },
-        success: function (res) {
-          console.log(res);
-        },
-        error: function (res) {
-          console.log(res);
-        }
-      });
-      
-    });
-    
-    
-  })(window, document);
 </script>
 
 </body></html>

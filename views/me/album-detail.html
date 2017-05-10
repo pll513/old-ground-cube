@@ -1,0 +1,717 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>个人中心</title>
+  <link rel="stylesheet" href="/css/metro.min.css">
+  <link rel="stylesheet" href="/css/metro-colors.min.css">
+  <link rel="stylesheet" href="/css/metro-icons.min.css">
+  <link rel="stylesheet" href="/css/metro-responsive.min.css">
+  <link rel="stylesheet" href="/css/metro-rtl.min.css">
+  <link rel="stylesheet" href="/css/metro-schemes.min.css">
+  <script src="/js/jquery-3.2.1.js"></script>
+  <script src="/js/metro.js"></script>
+  <script type="text/javascript" src="/js/caman.full.min.js"></script>
+  <style>
+    textarea {
+      resize: none;
+    }
+    
+    .sidebar2 {
+      margin-left: 100px;
+    }
+    
+    #album__info {
+      font-size: 14px;
+      color: #777;
+    }
+    
+    #album__time {
+      display: inline-block;
+      line-height: 24px;
+    }
+    
+    #album__picture-count {
+      margin-left: 10px;
+      display: inline-block;
+      line-height: 24px;
+    }
+    
+    #album__comment-count {
+      margin-left: 10px;
+      display: inline-block;
+      line-height: 24px;
+    }
+    
+    .main {
+      width: 800px;
+      margin: 100px auto auto 400px;
+      background-color: #fff;
+      opacity: 0;
+      -webkit-transform: scale(.8);
+      transform: scale(.8);
+    }
+    
+    .f-none {
+      display: none;
+    }
+    
+    #form-new-page {
+      
+    }
+    
+    #form-new-page .input-control {
+      width: 400px;
+    }
+    
+    #form-new-page textarea {
+      height: 100px;
+    }
+    
+    #form-new-page .input-control {
+      width: 400px;
+    }
+    
+    #form-edit-desc .input-control {
+      width: 400px;
+    }
+    
+    #form-edit-desc textarea {
+      resize: none;
+      height: 100px;
+    }
+    
+    #picture-preview {
+      height: 300px;
+      width: 400px;
+      position: relative;
+    }
+    
+    #canvas-picture-preview {
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+    
+    #slider-group {
+      
+    }
+    
+    #edit-slider-group, #slider-group .slider {
+      width: 400px;
+    }
+    
+    #brightness {
+      width: 400px;
+    }
+  </style>
+</head>
+<body class="bg-darkGray">
+<ul class="sidebar2">
+  <li class="title">个人中心</li>
+  <li><a href="/me/pictures"><span class="mif-file-image icon"></span>我的图片</a></li>
+  <li><a href="/me/topics"><span class="mif-bubbles icon"></span>我的话题</a></li>
+  <li class="active"><a href="/me/albums"><span class="mif-images icon"></span>我的相册</a></li>
+  <li><a href="/me/messages"><span class="mif-envelop icon"></span>我的消息</a></li>
+  <li>
+    <a class="dropdown-toggle" href="#"><span class="mif-cog icon"></span>个人设置</a>
+    <ul class="d-menu" data-role="dropdown" style="display: none;">
+      <li><a href="/me/settings/change-avatar">修改头像</a></li>
+      <li><a href="/me/settings/change-pass">修改密码</a></li>
+    </ul>
+  </li>
+</ul>
+<main style="opacity: 1;transform: scale(1);transition: 0.5s;" class="main padding20 block-shadow">
+  <h1 class="text-light" id="album-name">相册名称</h1>
+  <hr class="thin">
+  <div id="album__info">
+    <div id="album__time">上次修改时间: <span>2013/12/12 14:11</span></div>
+    <div id="album__picture-count">图片数量：<span>12</span></div>
+    <div id="album__comment-count">评论总数：<span>122</span></div>
+  </div>
+  <br>
+  <div id="button-group">
+    <button id="button-unlock-album" class="button info"><span class="mif-unlock icon"></span> 公开相册</button>
+    <button id="button-lock-album" class="button info"><span class="mif-lock icon"></span> 设为私有</button>
+    <button id="button-new-page" class="button success"><span class="mif-plus icon"></span> 添加图片</button>
+    <button id="button-edit-desc" class="button success"><span class="mif-plus icon"></span> 添加相册介绍</button>
+  </div>
+  
+  <div id="form-new-page" class="f-none">
+    <h3 class="text-light">添加图片</h3>
+    <hr class="thin">
+    <br>
+    <form action="" enctype="multipart/form-data">
+      <div class="input-control textarea">
+        <label for="textarea-page-desc">图片介绍</label>
+        <textarea id="textarea-page-desc"></textarea>
+        <br>
+      </div>
+      <br>
+      <br>
+      <div class="input-control file" data-role="input">
+        <label for="textarea-page-desc">选择上传一张图片</label>
+        <input type="file" id="file-new-image" accept="image/*">
+        <button class="button"><span class="mif-image"></span></button>
+      </div>
+      <div id="picture-preview">
+      
+      </div>
+      <div id="slider-group" class="f-none">
+        <div>亮度</div>
+        <div id="brightness" class="slider" data-role="slider" data-show-hint="true"
+             data-position="50" data-min-value="-100" data-max-value="100">
+          <div class="slider-backside"></div>
+          <div class="complete" style="width: 66px;"></div>
+          <div class="buffer" style="width: 0%;"></div>
+          <a class="marker" style="left: 66px;"></a><span class="slider-hint" style="left: 57px;">0</span>
+        </div>
+        <div>对比度</div>
+        <div id="contrast" class="slider" data-role="slider" data-show-hint="true"
+             data-position="50" data-min-value="-100" data-max-value="100">
+          <div class="slider-backside"></div>
+          <div class="complete" style="width: 66px;"></div>
+          <div class="buffer" style="width: 0%;"></div>
+          <a class="marker" style="left: 66px;"></a><span class="slider-hint" style="left: 57px;">0</span>
+        </div>
+        <div>饱和度</div>
+        <div id="saturation" class="slider" data-role="slider" data-show-hint="true"
+             data-position="50" data-min-value="-100" data-max-value="100">
+          <div class="slider-backside"></div>
+          <div class="complete" style="width: 66px;"></div>
+          <div class="buffer" style="width: 0%;"></div>
+          <a class="marker" style="left: 66px;"></a><span class="slider-hint" style="left: 57px;">0</span>
+        </div>
+      
+      </div>
+      <div class="form-actions">
+        <button id="button-add-page" type="submit" class="button primary">添加</button>
+      </div>
+    </form>
+  </div>
+  
+  
+  <div id="form-edit-desc" class="f-none">
+    <h3 class="text-light">相册介绍</h3>
+    <hr class="thin">
+    <br>
+    <form action="">
+      <div class="input-control textarea">
+        <label for="textarea-album-desc">相册描述</label>
+        <textarea id="textarea-album-desc"></textarea>
+        <br>
+      </div>
+      <div class="form-actions">
+        <button id="submit-edit-desc" type="submit" class="button primary">保存提交</button>
+      </div>
+    </form>
+  </div>
+  
+  
+  <div id="page-area">
+    <div id="page-area-detail">
+      <img id="page-img" src="" alt="" height="200">
+      <div id="page-desc"></div>
+    </div>
+    <div id="page-area-button-group">
+      <button class="button primary" id="button-prev"><span class="icon mif-arrow-left"></span> 上一张</button>
+      <button class="button primary" id="button-next"><span class="icon mif-arrow-right"></span> 下一张</button>
+      <button class="button success" id="button-edit-page"><span class="icon mif-pencil"></span> 编辑</button>
+    </div>
+    <div id="edit-slider-group">
+      <div>亮度</div>
+      <div id="edit-brightness" class="slider" data-role="slider" data-show-hint="true"
+           data-position="50" data-min-value="-100" data-max-value="100">
+        <div class="slider-backside"></div>
+        <div class="complete"></div>
+        <div class="buffer"></div>
+        <a class="marker"></a><span class="slider-hint">0</span>
+      </div>
+      <div>对比度</div>
+      <div id="edit-contrast" class="slider" data-role="slider" data-show-hint="true"
+           data-position="50" data-min-value="-100" data-max-value="100">
+        <div class="slider-backside"></div>
+        <div class="complete" style="width: 66px;"></div>
+        <div class="buffer" style="width: 0%;"></div>
+        <a class="marker" style="left: 66px;"></a><span class="slider-hint" style="left: 57px;">0</span>
+      </div>
+      <div>饱和度</div>
+      <div id="edit-saturation" class="slider" data-role="slider" data-show-hint="true"
+           data-position="50" data-min-value="-100" data-max-value="100">
+        <div class="slider-backside"></div>
+        <div class="complete" style="width: 66px;"></div>
+        <div class="buffer" style="width: 0%;"></div>
+        <a class="marker" style="left: 66px;"></a><span class="slider-hint" style="left: 57px;">0</span>
+      </div>
+    </div>
+  </div>
+</main>
+<script>
+  
+  var global = {};
+  
+  (function () {
+    var href = window.location.href;
+    var lastIndex = href.lastIndexOf('/');
+    global.albumId = href.slice(lastIndex + 1);
+  })();
+  
+  // 页面动作
+  (function (w, d) {
+    
+    var buttonGroup = d.getElementById('button-group');
+    var pageAreaJQ = $('#page-area');
+    var formEditDescJQ = $('#form-edit-desc');
+    var formNewPageJQ = $('#form-new-page');
+    var textareaAlbumDesc = d.getElementById('textarea-album-desc');
+    var submitEditDesc = d.getElementById('submit-edit-desc');
+    
+    submitEditDesc.addEventListener('click', function (event) {
+      event.preventDefault();
+      var token = window.localStorage.getItem('token');
+      if (token) {
+        $.ajaxSetup({
+          headers: {
+            'x-access-token': token
+          }
+        });
+      }
+      $.ajax({
+        method: 'POST',
+        url: '/albums/editAlbumDesc',
+        data: {
+          id: global.albumId,
+          desc: textareaAlbumDesc.value
+        },
+        success: function (res) {
+          console.log(res);
+          if (res.success) {
+            $.Notify({
+              caption: '操作成功',
+              content: '相册介绍修改成功',
+              type: 'success'
+            });
+            setTimeout(function () {
+              w.location.href = w.location.origin + '/me/albums/' + global.albumId;
+            }, 2000);
+          } else {
+            $.Notify({
+              caption: '操作失败',
+              content: res.message,
+              type: 'warning'
+            });
+          }
+        },
+        error: function (res) {
+          console.log(res);
+        }
+      });
+    });
+    
+    buttonGroup.addEventListener('click', function (event) {
+      event.preventDefault();
+      var target = event.target;
+      if (target.id === 'button-unlock-album') {
+        var token = window.localStorage.getItem('token');
+        if (token) {
+          $.ajaxSetup({
+            headers: {
+              'x-access-token': token
+            }
+          });
+        }
+        $.ajax({
+          method: 'POST',
+          url: '/albums/changeType',
+          data: {
+            id: global.albumId,
+            type: 2
+          },
+          success: function (res) {
+            console.log(res);
+            if (res.success) {
+              $.Notify({
+                caption: '操作成功',
+                content: '相册已公开',
+                type: 'success'
+              });
+              setTimeout(function () {
+                w.location.href = w.location.origin + '/me/albums/' + global.albumId;
+              }, 2000);
+            } else {
+              $.Notify({
+                caption: '操作失败',
+                content: res.message,
+                type: 'warning'
+              });
+            }
+          },
+          error: function (res) {
+            console.log(res);
+          }
+        });
+      } else if (target.id === 'button-lock-album') {
+        var token = window.localStorage.getItem('token');
+        if (token) {
+          $.ajaxSetup({
+            headers: {
+              'x-access-token': token
+            }
+          });
+        }
+        $.ajax({
+          method: 'POST',
+          url: '/albums/changeType',
+          data: {
+            id: global.albumId,
+            type: 1
+          },
+          success: function (res) {
+            console.log(res);
+            if (res.success) {
+              $.Notify({
+                caption: '操作成功',
+                content: '相册已变为私有',
+                type: 'success'
+              });
+              setTimeout(function () {
+                w.location.href = w.location.origin + '/me/albums/' + global.albumId;
+              }, 2000);
+            } else {
+              $.Notify({
+                caption: '操作失败',
+                content: res.message,
+                type: 'warning'
+              });
+            }
+          },
+          error: function (res) {
+            console.log(res);
+          }
+        });
+      } else if (target.id === 'button-new-page') {
+        if (formNewPageJQ.hasClass('f-none')) {
+          // 隐藏状态
+          formNewPageJQ.removeClass('f-none');
+          formEditDescJQ.addClass('f-none');
+          pageAreaJQ.addClass('f-none');
+        } else {
+          formNewPageJQ.addClass('f-none');
+          pageAreaJQ.removeClass('f-none');
+        }
+      } else if (target.id === 'button-edit-desc') {
+        if (formEditDescJQ.hasClass('f-none')) {
+          // 隐藏状态
+          formNewPageJQ.addClass('f-none');
+          formEditDescJQ.removeClass('f-none');
+          pageAreaJQ.addClass('f-none');
+          $.ajax({
+            method: 'POST',
+            url: '/albums/albumDesc',
+            data: {id: global.albumId},
+            success: function (res) {
+              console.log(res);
+              if (res.success) {
+                textareaAlbumDesc.value = res.data || '';
+              }
+            },
+            error: function (res) {
+              console.log(res);
+            }
+          });
+        } else {
+          formEditDescJQ.addClass('f-none');
+          pageAreaJQ.removeClass('f-none');
+        }
+      }
+    });
+    
+  })(window, document);
+  
+  (function (w, d) {
+    
+    var fileNewImage = d.getElementById('file-new-image');
+    var picturePreviewJQ = $('#picture-preview');
+    var sliderGroupJQ = $('#slider-group');
+    
+    fileNewImage.addEventListener('change', function (event) {
+      event.preventDefault();
+      var formData = new FormData();
+      if (fileNewImage.files.length > 0) {
+        formData.append('picture', fileNewImage.files[0]);
+      }
+      var token = window.localStorage.getItem('token');
+      if (token) {
+        $.ajaxSetup({
+          headers: {
+            'x-access-token': token
+          }
+        });
+      }
+      $.ajax({
+        url: "/albums/picturePreview",
+        type: "POST",
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (res) {
+          console.log(res);
+          if (res.success) {
+            var imgUrl = res.data.img_url;
+            picturePreviewJQ.empty();
+            var pictureHtml = '<h3 class="text-light">图片预览</h3><hr class="thin"><br><canvas id="canvas-picture-preview" style="width: 400px"></canvas>';
+            picturePreviewJQ.html(pictureHtml);
+            global.imgUrl = imgUrl;
+            
+            Caman('#canvas-picture-preview', imgUrl, function () {
+              this.render();
+            });
+            sliderGroupJQ.removeClass('f-none');
+          }
+        },
+        error: function (res) {
+          console.log(res);
+        }
+      });
+    });
+    
+    
+  })(window, document);
+  
+  (function (w, d) {
+    
+    var currentBrightness = 0;
+    var currentContrast = 0;
+    var currentSaturation = 0;
+    var brightness;
+    var contrast;
+    var saturation;
+    var brightnessHintJQ = $('.slider-hint', '#brightness');
+    var contrastHintJQ = $('.slider-hint', '#contrast');
+    var saturationHintJQ = $('.slider-hint', '#saturation');
+    var picturePreviewJQ = $('#picture-preview');
+    
+    setInterval(function () {
+      var canvasPicturePreview = d.getElementById('canvas-picture-preview');
+      if (canvasPicturePreview) {
+        brightness = parseInt(brightnessHintJQ.html());
+        contrast = parseInt(contrastHintJQ.html());
+        saturation = parseInt(saturationHintJQ.html());
+//        console.log(brightness);
+//        console.log(contrast);
+//        console.log(saturation);
+        
+        if (currentBrightness !== brightness || currentContrast !== contrast || currentSaturation !== saturation) {
+          console.log(global.imgUrl);
+          $(canvasPicturePreview).remove();
+//          var pictureHtml = '<h3 class="text-light">图片预览</h3><hr class="thin"><br><canvas id="canvas-picture-preview" style="width: 400px"></canvas>';
+          picturePreviewJQ.append('<canvas id="canvas-picture-preview" style="width: 400px"></canvas>');
+          Caman('#canvas-picture-preview', global.imgUrl, function () {
+            this.brightness(brightness);
+            this.contrast(contrast);
+            this.saturation(saturation);
+            this.render();
+            currentBrightness = brightness;
+            currentContrast = contrast;
+            currentSaturation = saturation;
+          });
+        }
+        
+      }
+    }, 1000);
+    
+    
+    var buttonAddPage = d.getElementById('button-add-page');
+    var textAreaPageDesc = d.getElementById('textarea-page-desc');
+    
+    buttonAddPage.addEventListener('click', function (event) {
+      event.preventDefault();
+      var token = window.localStorage.getItem('token');
+      if (token) {
+        $.ajaxSetup({
+          headers: {
+            'x-access-token': token
+          }
+        });
+      }
+      $.ajax({
+        method: 'POST',
+        url: '/albums/addPage',
+        data: {
+          id: global.albumId,
+          img_url: global.imgUrl,
+          brightness: brightness,
+          contrast: contrast,
+          saturation: saturation,
+          desc: textAreaPageDesc.value
+        },
+        success: function (res) {
+          console.log(res);
+          if (res.success) {
+            $.Notify({
+              caption: '操作成功',
+              content: '添加相片成功',
+              type: 'success'
+            });
+            setTimeout(function () {
+              w.location.href = w.location.origin + '/me/albums/' + global.albumId;
+            }, 2000);
+          }
+        },
+        error: function (res) {
+          console.log(res);
+        }
+      });
+    });
+    
+  })(window, document);
+  
+  // 获取相册详情
+  (function (w, d) {
+    
+    var currentPage = 0;
+    
+    var albumTime = d.getElementById('album__time');
+    var albumPictureCount = d.getElementById('album__picture-count');
+    var albumCommentCount = d.getElementById('album__comment-count');
+    var albumName = d.getElementById('album-name');
+    var buttonPrev = d.getElementById('button-prev');
+    var buttonNext = d.getElementById('button-next');
+    var buttonUnlockAlbumJQ = $('#button-unlock-album');
+    var buttonLockAlbumJQ = $('#button-lock-album');
+    var pageAreaJQ = $('#page-area');
+    var pageAreaDetailJQ = $('#page-area-detail');
+    var pageAreaButtonGroup = d.getElementById('page-area-button-group');
+    var editSliderGrounpJQ = $('#edit-slider-group');
+    var buttonEditPage = d.getElementById('button-edit-page');
+    editSliderGrounpJQ.addClass('f-none');
+    
+    var editBrightness = d.getElementById('edit-brightness');
+    var editContrast = d.getElementById('edit-contrast');
+    var editSaturation = d.getElementById('edit-saturation');
+    
+    var editBrightnessHintJQ = $('.slider-hint', '#edit-brightness');
+    var editContrastHintJQ = $('.slider-hint', '#edit-contrast');
+    var editSaturationHintJQ = $('.slider-hint', '#edit-saturation');
+    
+    
+    
+    var albumPageList;
+    
+    buttonEditPage.addEventListener('click', function (event) {
+      event.preventDefault();
+      editSliderGrounpJQ.toggleClass('f-none');
+    });
+    
+    var token = window.localStorage.getItem('token');
+    if (token) {
+      $.ajaxSetup({
+        headers: {
+          'x-access-token': token
+        }
+      });
+    }
+    $.ajax({
+      method: 'POST',
+      url: '/albums/albumDetail',
+      data: {
+        id: global.albumId
+      },
+      success: function (res) {
+        console.log(res);
+        if (res.success) {
+          var albumDetail = res.data;
+        }
+        albumTime.innerHTML = '上次修改时间：' + formatTime2(albumDetail.time);
+        albumPictureCount.innerHTML = '图片总数： ' + albumDetail.pages.length;
+        albumCommentCount.innerHTML = '评论总数：' + albumDetail.comments.length;
+        albumName.innerHTML = albumDetail.name;
+        albumPageList = albumDetail.pages || [];
+        console.log(albumDetail.type);
+        if (albumDetail.type == 1) {
+          buttonLockAlbumJQ.addClass('f-none');
+        } else {
+          buttonUnlockAlbumJQ.addClass('f-none');
+        }
+        if (albumPageList.length > 0) {
+          editBrightness.setAttribute('data-position', (100 + parseInt(albumPageList[0].brightness))/2 + '');
+          editContrast.setAttribute('data-position', (100 + parseInt(albumPageList[0].contrast))/2 + '');
+          editSaturation.setAttribute('data-position', (100 + parseInt(albumPageList[0].saturation))/2 + '');
+          editBrightnessHintJQ.html(albumPageList[0].brightness);
+          editContrastHintJQ.html(albumPageList[0].contrast);
+          editSaturationHintJQ.html(albumPageList[0].saturation);
+          pageAreaDetailJQ.html('<canvas id="page-img" style="height: 200px;"><div id="page-desc">' + albumPageList[0].desc + '</div>');
+          Caman('#page-img', albumPageList[0].img_url, function () {
+            this.brightness(albumPageList[0].brightness);
+            this.contrast(albumPageList[0].contrast);
+            this.saturation(albumPageList[0].saturation);
+            this.render();
+          });
+          
+        } else {
+          pageAreaButtonGroup.className = 'f-none';
+          pageAreaDetailJQ.html('<div id="no-pages">你还没有为该相册添加照片</div>');
+        }
+      },
+      error: function (res) {
+        console.log(res);
+      }
+    });
+    
+    
+    buttonNext.addEventListener('click', function (event) {
+      event.preventDefault();
+      if (currentPage < albumPageList.length - 1) {
+        currentPage += 1;
+        editBrightness.setAttribute('data-position', (100 + parseInt(albumPageList[currentPage].brightness))/2 + '');
+        editContrast.setAttribute('data-position', (100 + parseInt(albumPageList[currentPage].contrast))/2 + '');
+        editSaturation.setAttribute('data-position', (100 + parseInt(albumPageList[currentPage].saturation))/2 + '');
+        editBrightnessHintJQ.html(albumPageList[currentPage].brightness);
+        editContrastHintJQ.html(albumPageList[currentPage].contrast);
+        editSaturationHintJQ.html(albumPageList[currentPage].saturation);
+        pageAreaDetailJQ.html('<canvas id="page-img" style="height: 200px;"></canvas><div id="page-desc">' + albumPageList[currentPage].desc + '</div>');
+        Caman('#page-img', albumPageList[currentPage].img_url, function () {
+          this.brightness(albumPageList[currentPage].brightness);
+          this.contrast(albumPageList[currentPage].contrast);
+          this.saturation(albumPageList[currentPage].saturation);
+          this.render();
+        });
+      }
+    });
+    
+    buttonPrev.addEventListener('click', function (event) {
+      event.preventDefault();
+      if (currentPage >= 1) {
+        currentPage -= 1;
+        editBrightness.setAttribute('data-position', (100 + parseInt(albumPageList[currentPage].brightness))/2 + '');
+        editContrast.setAttribute('data-position', (100 + parseInt(albumPageList[currentPage].contrast))/2 + '');
+        editSaturation.setAttribute('data-position', (100 + parseInt(albumPageList[currentPage].saturation))/2 + '');
+        editBrightnessHintJQ.html(albumPageList[currentPage].brightness);
+        editContrastHintJQ.html(albumPageList[currentPage].contrast);
+        editSaturationHintJQ.html(albumPageList[currentPage].saturation);
+        pageAreaDetailJQ.html('<canvas id="page-img" style="height: 200px;"></canvas><div id="page-desc">' + albumPageList[currentPage].desc + '</div>');
+        Caman('#page-img', albumPageList[currentPage].img_url, function () {
+          this.brightness(albumPageList[currentPage].brightness);
+          this.contrast(albumPageList[currentPage].contrast);
+          this.saturation(albumPageList[currentPage].saturation);
+          this.render();
+        });
+      }
+    });
+    
+    
+  })(window, document);
+  
+  (function (w, d) {
+    
+    
+  })(window, document);
+  
+  function formatTime2(time) {
+    var date = new Date(time);
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+    return year + '/' + month + '/' + day;
+  }
+</script>
+</body>

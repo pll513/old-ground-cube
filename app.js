@@ -11,6 +11,7 @@ var picture = require('./routes/picture');
 var topic = require('./routes/topic');
 var album = require('./routes/album');
 var user = require('./routes/users');
+var me = require('./routes/me');
 
 var app = express();
 
@@ -32,6 +33,7 @@ app.use('/pictures', picture);
 app.use('/topics', topic);
 app.use('/albums', album);
 app.use('/users', user);
+app.use('/me', me);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

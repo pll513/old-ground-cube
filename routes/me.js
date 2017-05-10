@@ -14,27 +14,35 @@ var Jimp = require('jimp');
 var sizeOf = require('image-size');
 
 router.get('/', function (req, res, next) {
-  res.render('me/index');
+  res.redirect('/me/pictures');
 });
 
 router.get('/pictures', function (req, res, next) {
-  
+  res.render('me/picture');
 });
 
 router.get('/topics', function (req, res, next) {
-  
+  res.render('me/topic');
 });
 
 router.get('/albums', function (req, res, next) {
-  
+  res.render('me/album');
+});
+
+router.get('/albums/:albumId', function (req, res, next) {
+  res.render('me/album-detail');
+});
+
+router.get('/messages', function (req, res, next) {
+  res.render('me/message');
 });
 
 router.get('/settings/change-pass', function (req, res, next) {
-  
+  res.render('me/change-pass');
 });
 
 router.get('/settings/change-avatar', function (req, res, next) {
-  
+  res.render('me/change-avatar');
 });
 
 

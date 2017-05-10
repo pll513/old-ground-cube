@@ -23,19 +23,22 @@
       transform: scale(.8);
     }
     
+    #change-avatar-main .input-control {
+      width: 320px;
+    }
   </style>
 </head>
 <body class="bg-darkGray">
 <ul class="sidebar2">
   <li class="title">个人中心</li>
-  <li class="active"><a href="/me/pictures"><span class="mif-file-image icon"></span>我的图片</a></li>
+  <li><a href="/me/pictures"><span class="mif-file-image icon"></span>我的图片</a></li>
   <li><a href="/me/topics"><span class="mif-bubbles icon"></span>我的话题</a></li>
   <li><a href="/me/albums"><span class="mif-images icon"></span>我的相册</a></li>
   <li><a href="/me/messages"><span class="mif-envelop icon"></span>我的消息</a></li>
-  <li>
-    <a class="dropdown-toggle" href="#"><span class="mif-cog icon"></span>个人设置</a>
-    <ul class="d-menu" data-role="dropdown" style="display: none;">
-      <li><a href="/me/settings/change-avatar">修改头像</a></li>
+  <li class="active-container">
+    <a class="dropdown-toggle active-toggle" href="#"><span class="mif-cog icon"></span>个人设置</a>
+    <ul class="d-menu" data-role="dropdown" style="display: block;">
+      <li><a style="background-color: #7cc1de;color:#fff;" href="/me/settings/change-avatar">修改头像</a></li>
       <li><a href="/me/settings/change-pass">修改密码</a></li>
     </ul>
   </li>
@@ -58,6 +61,52 @@
   </div>
 </main>
 <script>
-  
+  (function (w, d) {
+    
+    var btnChangeAvatar = d.getElementById('btn-change-avatar');
+    var inputAvatar = d.getElementById('input-avatar');
+    btnChangeAvatar.addEventListener('click', function (event) {
+      event.preventDefault();
+      if (inputAvatar.files.length > 0) {
+        var formData = new FormData();
+        var token = window.localStorage.getItem('token');
+        if (token) {
+          $.ajaxSetup({
+            headers: {
+              'x-access-token': token
+            }
+          });
+        }
+        formData.append('avatar', inputAvatar.files[0]);
+        $.ajax({
+          url: "/users/changeAvatar",
+          type: "POST",
+          data: formData,
+          contentType: false,
+          processData: false,
+          success: function (res) {
+            console.log(res);
+            if (res.success) {
+              $.Notify({
+                caption: '修改头像成功',
+                content: '',
+                type: 'success'
+              });
+            } else {
+              $.Notify({
+                caption: '修改头像失败',
+                content: res.message,
+                type: 'warning'
+              });
+            }
+          },
+          error: function (res) {
+            console.log(res);
+          }
+        });
+      }
+    });
+    
+  })(window, document);
 </script>
 </body>

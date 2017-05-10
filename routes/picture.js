@@ -130,9 +130,6 @@ router.post('/pictureList', function (req, res, next) {
   var pageSize = parseInt(req.body.pageSize) || 24;
   var skip = (pageIndex - 1) * pageSize;
   var limit = pageSize;
-  console.log(category);
-  console.log(skip);
-  console.log(limit);
   MongoClient.connect(mongoUrl, function (err, db) {
     if (err) return res.json({success: false, message: err});
     db.collection('picture').find({category: category}, {
@@ -162,7 +159,6 @@ router.post('/pictureDetail', function (req, res, next) {
 });
 
 router.post('/publish', [multipartMiddleware, jwtAuth], function (req, res, next) {
-  console.log(req.body.picture_category);
   var authorId = req.decoded._id;
   var authorName = req.decoded.name;
   var pictureDesc = req.body.picture_desc;

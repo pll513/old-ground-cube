@@ -69,7 +69,7 @@ router.post('/publish', jwtAuth, function (req, res, next) {
       if (err) {
         console.log('图片移动失败： ' + err);
       } else {
-        console.log('图片移动成功： ');
+        console.log('图片移动成功');
       }
     });
   }
@@ -204,10 +204,6 @@ router.post('/delete', jwtAuth, function (req, res, next) {
 });
 
 router.post('/uploadPictures', [jwtAuth, multipartMiddleware], function (req, res, next) {
-  // console.log(webPath);
-  // console.log(req.files['picture1']);
-  // console.log(typeof req.files['picture1']);
-  // console.log(req.body.test);
   var fileUrl = [];
   var fileExt;
   var originalFilename;

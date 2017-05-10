@@ -70,21 +70,21 @@ router.post('/changeAvatar', [jwtAuth, multipartMiddleware], function (req, res,
     db.collection('user').updateOne({_id: ObjectID(userId)}, {$set: {avatar: avatarUrl}}, {upsert: true}, function (err, result) {
       assert.equal(null, err);
       db.close();
+      fs.rename(file.path, webPath + '/public/images/avatar/' + newFilename, function (err) {
+        if (err) {
+          console.log('rename error: ' + err);
+          res.json({
+            success: false,
+            message: '对不起，图片上传失败'
+          });
+        } else {
+          res.json({
+            success: true,
+            avatarUrl: avatarUrl
+          });
+        }
+      });
     });
-  });
-  fs.rename(file.path, webPath + '/public/images/avatar/' + newFilename, function (err) {
-    if (err) {
-      console.log('rename error: ' + err);
-      res.json({
-        success: false,
-        message: '对不起，图片上传失败'
-      });
-    } else {
-      res.json({
-        success: true,
-        avatarUrl: avatarUrl
-      });
-    }
   });
 });
 

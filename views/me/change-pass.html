@@ -1,0 +1,123 @@
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <title>个人中心</title>
+  <link rel="stylesheet" href="/css/metro.min.css">
+  <link rel="stylesheet" href="/css/metro-colors.min.css">
+  <link rel="stylesheet" href="/css/metro-icons.min.css">
+  <link rel="stylesheet" href="/css/metro-responsive.min.css">
+  <link rel="stylesheet" href="/css/metro-rtl.min.css">
+  <link rel="stylesheet" href="/css/metro-schemes.min.css">
+  <style>
+    .sidebar2 {
+      margin-left: 100px;
+    }
+    .main {
+      width: 800px;
+      margin: 100px auto auto 400px;
+      background-color: #fff;
+      opacity: 0;
+      -webkit-transform: scale(.8);
+      transform: scale(.8);
+    }
+    #change-password-main .input-control {
+      width: 320px;
+    }
+  </style>
+  <script src="/js/jquery-3.2.1.js"></script>
+  <script src="/js/metro.js"></script>
+</head>
+<body class="bg-darkGray">
+<ul class="sidebar2">
+  <li class="title">个人中心</li>
+  <li><a href="/me/pictures"><span class="mif-file-image icon"></span>我的图片</a></li>
+  <li><a href="/me/topics"><span class="mif-bubbles icon"></span>我的话题</a></li>
+  <li><a href="/me/albums"><span class="mif-images icon"></span>我的相册</a></li>
+  <li><a href="/me/messages"><span class="mif-envelop icon"></span>我的消息</a></li>
+  <li class="active-container">
+    <a class="dropdown-toggle active-toggle" href="#"><span class="mif-cog icon"></span>个人设置</a>
+    <ul class="d-menu" data-role="dropdown" style="display: block;">
+      <li><a href="/me/settings/change-avatar">修改头像</a></li>
+      <li><a style="background-color: #7cc1de;color:#fff;" href="/me/settings/change-pass">修改密码</a></li>
+    </ul>
+  </li>
+</ul>
+<main style="opacity: 1;transform: scale(1);transition: 0.5s;" class="main padding20 block-shadow">
+  <h1 class="text-light">修改密码</h1>
+  <hr class="thin">
+  <br>
+  <div id="change-password-main" class="main__item">
+    <form action="">
+      <div class="input-control text" data-role="input">
+        <label for="old_password">旧密码</label>
+        <input id="old_password" name="old_password" type="password" style="padding-right: 5px;">
+      </div>
+      <br><br>
+      <div class="input-control text" data-role="input">
+        <label for="new_password">新密码</label>
+        <input id="new_password" name="new_password" type="password" style="padding-right: 5px;">
+      </div>
+      <br><br>
+      <div class="input-control text" data-role="input">
+        <label for="new_password_confirm">确认新密码</label>
+        <input id="new_password_confirm" name="new_password_confirm" type="password" style="padding-right: 5px;">
+      </div>
+      <br><br>
+      <div class="form-actions">
+        <button id="btn-change-password" class="button primary" type="submit">修改</button>
+      </div>
+    </form>
+  </div>
+</main>
+<script>
+  (function (w, d) {
+    
+    var inputOldPassword = d.getElementById('old_password');
+    var inputNewPassword = d.getElementById('new_password');
+    var inputNewPasswordConfirm = d.getElementById('new_password_confirm');
+    var btnChangePassword = d.getElementById('btn-change-password');
+    
+    btnChangePassword.addEventListener('click', function (event) {
+      event.preventDefault();
+      var token = window.localStorage.getItem('token');
+      if (token) {
+        $.ajaxSetup({
+          headers: {
+            'x-access-token': token
+          }
+        });
+      }
+      $.ajax({
+        method: 'POST',
+        url: '/users/changePassword',
+        data: {
+          old_password: inputOldPassword.value,
+          new_password: inputNewPassword.value,
+          new_password_confirm: inputNewPasswordConfirm.value
+        },
+        success: function (res) {
+          console.log(res);
+          if (res.success) {
+            $.Notify({
+              caption: '修改密码成功',
+              content: '',
+              type: 'success'
+            });
+          } else {
+            $.Notify({
+              caption: '修改密码失败',
+              content: res.message,
+              type: 'warning'
+            });
+          }
+        },
+        error: function (res) {
+          console.log(res);
+        }
+      });
+      
+    });
+    
+    
+  })(window, document);
+</script>
+</body>
