@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="/css/metro-rtl.min.css">
   <link rel="stylesheet" href="/css/metro-schemes.min.css">
   <script src="/js/jquery-3.2.1.js"></script>
-  <script src="/js/metro.js"></script>
   <script type="text/javascript" src="/js/caman.full.min.js"></script>
   <style>
     textarea {
@@ -81,7 +80,7 @@
     }
     
     #picture-preview {
-      height: 300px;
+      height: 250px;
       width: 400px;
       position: relative;
     }
@@ -190,7 +189,7 @@
   </div>
   
   
-  <div id="form-edit-desc" class="f-none">
+  <div id="form-edit-desc">
     <h3 class="text-light">相册介绍</h3>
     <hr class="thin">
     <br>
@@ -210,39 +209,14 @@
   <div id="page-area">
     <div id="page-area-detail">
       <img id="page-img" src="" alt="" height="200">
-      <div id="page-desc"></div>
     </div>
+    <div id="page-desc" contenteditable="true"></div>
     <div id="page-area-button-group">
       <button class="button primary" id="button-prev"><span class="icon mif-arrow-left"></span> 上一张</button>
       <button class="button primary" id="button-next"><span class="icon mif-arrow-right"></span> 下一张</button>
-      <button class="button success" id="button-edit-page"><span class="icon mif-pencil"></span> 编辑</button>
+      <button class="button success" id="button-edit-page"><span class="icon mif-pencil"></span> 保存修改</button>
     </div>
-    <div id="edit-slider-group">
-      <div>亮度</div>
-      <div id="edit-brightness" class="slider" data-role="slider" data-show-hint="true"
-           data-position="50" data-min-value="-100" data-max-value="100">
-        <div class="slider-backside"></div>
-        <div class="complete"></div>
-        <div class="buffer"></div>
-        <a class="marker"></a><span class="slider-hint">0</span>
-      </div>
-      <div>对比度</div>
-      <div id="edit-contrast" class="slider" data-role="slider" data-show-hint="true"
-           data-position="50" data-min-value="-100" data-max-value="100">
-        <div class="slider-backside"></div>
-        <div class="complete" style="width: 66px;"></div>
-        <div class="buffer" style="width: 0%;"></div>
-        <a class="marker" style="left: 66px;"></a><span class="slider-hint" style="left: 57px;">0</span>
-      </div>
-      <div>饱和度</div>
-      <div id="edit-saturation" class="slider" data-role="slider" data-show-hint="true"
-           data-position="50" data-min-value="-100" data-max-value="100">
-        <div class="slider-backside"></div>
-        <div class="complete" style="width: 66px;"></div>
-        <div class="buffer" style="width: 0%;"></div>
-        <a class="marker" style="left: 66px;"></a><span class="slider-hint" style="left: 57px;">0</span>
-      </div>
-    </div>
+    <div id="edit-slider-group"></div>
   </div>
 </main>
 <script>
@@ -489,6 +463,7 @@
     var contrastHintJQ = $('.slider-hint', '#contrast');
     var saturationHintJQ = $('.slider-hint', '#saturation');
     var picturePreviewJQ = $('#picture-preview');
+    var pageAreaDetailJQ = $('#page-area-detail');
     
     setInterval(function () {
       var canvasPicturePreview = d.getElementById('canvas-picture-preview');
@@ -496,14 +471,10 @@
         brightness = parseInt(brightnessHintJQ.html());
         contrast = parseInt(contrastHintJQ.html());
         saturation = parseInt(saturationHintJQ.html());
-//        console.log(brightness);
-//        console.log(contrast);
-//        console.log(saturation);
         
         if (currentBrightness !== brightness || currentContrast !== contrast || currentSaturation !== saturation) {
           console.log(global.imgUrl);
           $(canvasPicturePreview).remove();
-//          var pictureHtml = '<h3 class="text-light">图片预览</h3><hr class="thin"><br><canvas id="canvas-picture-preview" style="width: 400px"></canvas>';
           picturePreviewJQ.append('<canvas id="canvas-picture-preview" style="width: 400px"></canvas>');
           Caman('#canvas-picture-preview', global.imgUrl, function () {
             this.brightness(brightness);
@@ -583,7 +554,7 @@
     var pageAreaButtonGroup = d.getElementById('page-area-button-group');
     var editSliderGrounpJQ = $('#edit-slider-group');
     var buttonEditPage = d.getElementById('button-edit-page');
-    editSliderGrounpJQ.addClass('f-none');
+    
     
     var editBrightness = d.getElementById('edit-brightness');
     var editContrast = d.getElementById('edit-contrast');
@@ -593,13 +564,57 @@
     var editContrastHintJQ = $('.slider-hint', '#edit-contrast');
     var editSaturationHintJQ = $('.slider-hint', '#edit-saturation');
     
-    
+    var currentBrightness;
+    var currentContrast;
+    var currentSaturation;
     
     var albumPageList;
     
     buttonEditPage.addEventListener('click', function (event) {
       event.preventDefault();
-      editSliderGrounpJQ.toggleClass('f-none');
+      var token = window.localStorage.getItem('token');
+      if (token) {
+        $.ajaxSetup({
+          headers: {
+            'x-access-token': token
+          }
+        });
+      }
+      console.log(currentPage);
+      console.log(currentBrightness);
+      console.log(currentContrast);
+      console.log(currentSaturation);
+      $.ajax({
+        method: 'POST',
+        url: '/albums/editPage',
+        data: {
+          id: global.albumId,
+          page_num: currentPage,
+          brightness: currentBrightness,
+          contrast: currentContrast,
+          saturation: currentSaturation,
+          desc: d.getElementById('page-desc').value
+        },
+        success: function (res) {
+          console.log(res);
+          $.Notify({
+            caption: '操作成功',
+            content: '相册修改成功',
+            type: 'success'
+          });
+          setTimeout(function () {
+            w.location.href = w.location.origin + '/me/albums/' + global.albumId;
+          }, 2000);
+        },
+        error: function (res) {
+          console.log(res);
+          $.Notify({
+            caption: '操作失败',
+            content: '相册修改失败',
+            type: 'warning'
+          });
+        }
+      });
     });
     
     var token = window.localStorage.getItem('token');
@@ -626,19 +641,22 @@
         albumCommentCount.innerHTML = '评论总数：' + albumDetail.comments.length;
         albumName.innerHTML = albumDetail.name;
         albumPageList = albumDetail.pages || [];
-        console.log(albumDetail.type);
         if (albumDetail.type == 1) {
           buttonLockAlbumJQ.addClass('f-none');
         } else {
           buttonUnlockAlbumJQ.addClass('f-none');
         }
         if (albumPageList.length > 0) {
-          editBrightness.setAttribute('data-position', (100 + parseInt(albumPageList[0].brightness))/2 + '');
-          editContrast.setAttribute('data-position', (100 + parseInt(albumPageList[0].contrast))/2 + '');
-          editSaturation.setAttribute('data-position', (100 + parseInt(albumPageList[0].saturation))/2 + '');
-          editBrightnessHintJQ.html(albumPageList[0].brightness);
-          editContrastHintJQ.html(albumPageList[0].contrast);
-          editSaturationHintJQ.html(albumPageList[0].saturation);
+          var brightnessPosition = (100 + parseInt(albumPageList[currentPage].brightness)) / 2;
+          var contrastPosition = (100 + parseInt(albumPageList[currentPage].contrast)) / 2;
+          var saturationPosition = (100 + parseInt(albumPageList[currentPage].saturation)) / 2;
+          currentBrightness = brightnessPosition;
+          currentContrast = contrastPosition;
+          currentSaturation = saturationPosition;
+          editSliderGrounpJQ.html('<div>亮度</div><div id="edit-brightness" class="slider" data-role="slider" data-show-hint="true" data-position="' + brightnessPosition +
+              '" data-min-value="-100" data-max-value="100"></div><div>对比度</div><div id="edit-contrast" class="slider" data-role="slider" data-show-hint="true" data-position="' + contrastPosition +
+              '" data-min-value="-100" data-max-value="100"></div><div>饱和度</div><div id="edit-saturation" class="slider" data-role="slider" data-show-hint="true" data-position="' + saturationPosition +
+              '" data-min-value="-100" data-max-value="100"></div>');
           pageAreaDetailJQ.html('<canvas id="page-img" style="height: 200px;"><div id="page-desc">' + albumPageList[0].desc + '</div>');
           Caman('#page-img', albumPageList[0].img_url, function () {
             this.brightness(albumPageList[0].brightness);
@@ -649,6 +667,7 @@
           
         } else {
           pageAreaButtonGroup.className = 'f-none';
+          editSliderGrounpJQ.addClass('f-none');
           pageAreaDetailJQ.html('<div id="no-pages">你还没有为该相册添加照片</div>');
         }
       },
@@ -662,13 +681,17 @@
       event.preventDefault();
       if (currentPage < albumPageList.length - 1) {
         currentPage += 1;
-        editBrightness.setAttribute('data-position', (100 + parseInt(albumPageList[currentPage].brightness))/2 + '');
-        editContrast.setAttribute('data-position', (100 + parseInt(albumPageList[currentPage].contrast))/2 + '');
-        editSaturation.setAttribute('data-position', (100 + parseInt(albumPageList[currentPage].saturation))/2 + '');
-        editBrightnessHintJQ.html(albumPageList[currentPage].brightness);
-        editContrastHintJQ.html(albumPageList[currentPage].contrast);
-        editSaturationHintJQ.html(albumPageList[currentPage].saturation);
+        var brightnessPosition = (100 + parseInt(albumPageList[currentPage].brightness)) / 2;
+        var contrastPosition = (100 + parseInt(albumPageList[currentPage].contrast)) / 2;
+        var saturationPosition = (100 + parseInt(albumPageList[currentPage].saturation)) / 2;
+        editSliderGrounpJQ.html('<div>亮度</div><div id="edit-brightness" class="slider" data-role="slider" data-show-hint="true" data-position="' + brightnessPosition +
+            '" data-min-value="-100" data-max-value="100"></div><div>对比度</div><div id="edit-contrast" class="slider" data-role="slider" data-show-hint="true" data-position="' + contrastPosition +
+            '" data-min-value="-100" data-max-value="100"></div><div>饱和度</div><div id="edit-saturation" class="slider" data-role="slider" data-show-hint="true" data-position="' + saturationPosition +
+            '" data-min-value="-100" data-max-value="100"> </div>');
         pageAreaDetailJQ.html('<canvas id="page-img" style="height: 200px;"></canvas><div id="page-desc">' + albumPageList[currentPage].desc + '</div>');
+        currentBrightness = brightnessPosition;
+        currentContrast = contrastPosition;
+        currentSaturation = saturationPosition;
         Caman('#page-img', albumPageList[currentPage].img_url, function () {
           this.brightness(albumPageList[currentPage].brightness);
           this.contrast(albumPageList[currentPage].contrast);
@@ -682,13 +705,17 @@
       event.preventDefault();
       if (currentPage >= 1) {
         currentPage -= 1;
-        editBrightness.setAttribute('data-position', (100 + parseInt(albumPageList[currentPage].brightness))/2 + '');
-        editContrast.setAttribute('data-position', (100 + parseInt(albumPageList[currentPage].contrast))/2 + '');
-        editSaturation.setAttribute('data-position', (100 + parseInt(albumPageList[currentPage].saturation))/2 + '');
-        editBrightnessHintJQ.html(albumPageList[currentPage].brightness);
-        editContrastHintJQ.html(albumPageList[currentPage].contrast);
-        editSaturationHintJQ.html(albumPageList[currentPage].saturation);
+        var brightnessPosition = (100 + parseInt(albumPageList[currentPage].brightness)) / 2;
+        var contrastPosition = (100 + parseInt(albumPageList[currentPage].contrast)) / 2;
+        var saturationPosition = (100 + parseInt(albumPageList[currentPage].saturation)) / 2;
+        editSliderGrounpJQ.html('<div>亮度</div><div id="edit-brightness" class="slider" data-role="slider" data-show-hint="true" data-position="' + brightnessPosition +
+            '" data-min-value="-100" data-max-value="100"></div><div>对比度</div><div id="edit-contrast" class="slider" data-role="slider" data-show-hint="true" data-position="' + contrastPosition +
+            '" data-min-value="-100" data-max-value="100"></div><div>饱和度</div><div id="edit-saturation" class="slider" data-role="slider" data-show-hint="true" data-position="' + saturationPosition +
+            '" data-min-value="-100" data-max-value="100"> </div>');
         pageAreaDetailJQ.html('<canvas id="page-img" style="height: 200px;"></canvas><div id="page-desc">' + albumPageList[currentPage].desc + '</div>');
+        currentBrightness = brightnessPosition;
+        currentContrast = contrastPosition;
+        currentSaturation = saturationPosition;
         Caman('#page-img', albumPageList[currentPage].img_url, function () {
           this.brightness(albumPageList[currentPage].brightness);
           this.contrast(albumPageList[currentPage].contrast);
@@ -698,10 +725,33 @@
       }
     });
     
-    
-  })(window, document);
-  
-  (function (w, d) {
+    setInterval(function () {
+      var canvasPicturePreview = d.getElementById('page-img');
+      if (canvasPicturePreview) {
+        var brightness = parseInt($('.slider-hint', '#edit-brightness').html());
+        var contrast = parseInt($('.slider-hint', '#edit-contrast').html());
+        var saturation = parseInt($('.slider-hint', '#edit-saturation').html());
+        
+//        console.log(currentBrightness);
+//        console.log(currentContrast);
+//        console.log(currentSaturation);
+        
+        if (currentBrightness !== brightness || currentContrast !== contrast || currentSaturation !== saturation) {
+          pageAreaDetailJQ.empty();
+          pageAreaDetailJQ.append('<canvas id="page-img" style="height: 200px"></canvas>');
+          Caman('#page-img', albumPageList[currentPage].img_url, function () {
+            this.brightness(brightness);
+            this.contrast(contrast);
+            this.saturation(saturation);
+            this.render();
+            currentBrightness = brightness;
+            currentContrast = contrast;
+            currentSaturation = saturation;
+          });
+        }
+        
+      }
+    }, 1000);
     
     
   })(window, document);
@@ -714,4 +764,5 @@
     return year + '/' + month + '/' + day;
   }
 </script>
+<script src="/js/metro.js"></script>
 </body>

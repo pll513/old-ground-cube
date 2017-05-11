@@ -100,4 +100,9 @@ router.post('/basicInfo', function (req, res, next) {
   });
 });
 
+router.get('/user/:userId', function (req, res, next) {
+  console.log('用户');
+  res.render('user');
+});
+
 module.exports = router;

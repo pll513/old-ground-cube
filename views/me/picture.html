@@ -14,6 +14,7 @@
     .sidebar2 {
       margin-left: 100px;
     }
+    
     .main {
       width: 800px;
       margin: 100px auto auto 400px;
@@ -23,6 +24,68 @@
       transform: scale(.8);
     }
     
+    #picture-list:after {
+      content: " ";
+      display: table;
+      clear: both;
+    }
+    
+    .picture__item {
+      float: left;
+      margin-top: 10px;
+      position: relative;
+      width: 100%;
+      height: 120px;
+      background: rgb(247, 246, 244);
+    }
+    
+    .picture__image {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background-position: center;
+      background-size: contain;
+      width: 100px;
+      height: 100px;
+    }
+    
+    .picture__top {
+      position: absolute;
+      left: 120px;
+      top: 10px;
+      color: #777;
+      font-size: 14px;
+    }
+    
+    .picture__comment {
+      display: inline-block;
+      margin-left: 10px;
+    }
+    
+    .picture__category {
+      display: inline-block;
+      margin-left: 10px;
+    }
+    
+    .picture__like {
+      display: inline-block;
+      margin-left: 10px;
+    }
+    
+    .picture__time {
+      display: inline-block;
+    }
+    
+    .picture__desc {
+      position: absolute;
+      left: 120px;
+      top: 40px;
+      width: 470px;
+      color: #555;
+      font-size: 16px;
+      overflow: hidden;
+    }
+  
   </style>
 </head>
 <body class="bg-darkGray">
@@ -41,23 +104,91 @@
   </li>
 </ul>
 <main style="opacity: 1;transform: scale(1);transition: 0.5s;" class="main padding20 block-shadow">
-  <h1 class="text-light">修改头像</h1>
+  <h1 class="text-light">我上传的图片</h1>
   <hr class="thin">
   <br>
-  <div id="change-avatar-main">
-    <form action="">
-      <div class="input-control file" data-role="input">
-        <label for="input-avatar">请上传一张图片作为头像</label>
-        <input id="input-avatar" type="file" accept="image/*" tabindex="-1" style="z-index: 0;">
-        <button class="button" type="button"><span class="mif-folder"></span></button>
-      </div>
-      <div class="form-actions">
-        <button id="btn-change-avatar" class="button primary" type="submit">确定修改</button>
-      </div>
-    </form>
+  <div id="picture-list">
+  
   </div>
 </main>
 <script>
   
+  // 获取图片列表
+  (function (w, d) {
+    
+    var divPictureList = d.getElementById('picture-list');
+    var divPictureListJQ = $(divPictureList);
+    
+    var token = window.localStorage.getItem('token');
+    if (token) {
+      $.ajaxSetup({
+        headers: {
+          'x-access-token': token
+        }
+      });
+    }
+    $.ajax({
+      method: 'POST',
+      url: '/pictures/myPictureList',
+      success: function (res) {
+        console.log(res);
+        var pictureList = res.data;
+        var pictureListHtml = '';
+        var pictureItemHtml;
+        var categoryString;
+        var pictureCategory;
+        
+        for (var i = 0; i < pictureList.length; ++i) {
+          pictureCategory = pictureList[i].category;
+          if (pictureCategory === 'animal') {
+            categoryString = '动物';
+          } else if (pictureCategory === 'plant') {
+            categoryString = '植物'
+          } else if (pictureCategory === 'landscape') {
+            categoryString = '风景'
+          } else if (pictureCategory === 'human') {
+            categoryString = '人'
+          } else if (pictureCategory === 'comic') {
+            categoryString = '动漫'
+          } else if (pictureCategory === 'science') {
+            categoryString = '科技'
+          } else if (pictureCategory === 'architecture') {
+            categoryString = '建筑'
+          }
+          var commentCount = 0;
+          if (pictureList[i].comments && pictureList[i].comments) {
+            commentCount = pictureList[i].comments;
+          }
+          pictureItemHtml = '<a class="picture__item" href="/pictures/' + pictureList[i]._id +
+              '"><div class="picture__image" style="background-image: url(' + pictureList[i].url +
+              ')"></div><div class="picture__top"><div class="picture__time">上传时间：' + formatTime(pictureList[i].time) +
+              '</div><div class="picture__category">分类：' + categoryString +
+              '</div><div class="picture__comment">评论：' + commentCount +
+              '</div><div class="picture__like">喜欢：' + pictureList[i].like_count +
+              '</div></div><div class="picture__desc">' + pictureList[i].desc +
+              '</div></a>';
+          pictureListHtml += pictureItemHtml;
+        }
+        
+        divPictureListJQ.append(pictureListHtml);
+        
+      },
+      error: function (res) {
+        console.log(res);
+      }
+    });
+    
+  })(window, document);
+  
+  function formatTime(time) {
+    var date = new Date(time);
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+    var hour = date.getHours();
+    var minute = date.getMinutes();
+    var minuteStr = minute < 10 ? '0' + minute : '' + minute;
+    return year + '/' + month + '/' + day + ' ' + hour + ':' + minuteStr;
+  }
 </script>
 </body>

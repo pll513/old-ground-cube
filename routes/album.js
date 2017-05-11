@@ -191,4 +191,26 @@ router.post('/editAlbumDesc', function (req, res, next) {
   
 });
 
+router.post('/editPage', function (req, res, next) {
+  
+  console.log(req.body);
+  
+  MongoClient.connect(mongoUrl, function (err, db) {
+    if (err) return res.json({success: false, message: err});
+    db.collection('album').updateOne({id: req.body.id}, {
+      $set: {
+        [`pages.${req.body.page_num}.desc`]: req.body.desc,
+        [`pages.${req.body.page_num}.brightness`]: req.body.brightness,
+        [`pages.${req.body.page_num}.contrast`]: req.body.contrast,
+        [`pages.${req.body.page_num}.saturation`]: req.body.saturation
+      }
+    }, function (err, result) {
+      if (err) return res.json({success: false, message: err});
+      res.json({success: true});
+    });
+    
+  });
+  
+});
+
 module.exports = router;

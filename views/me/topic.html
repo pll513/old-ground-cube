@@ -14,6 +14,7 @@
     .sidebar2 {
       margin-left: 100px;
     }
+    
     .main {
       width: 800px;
       margin: 100px auto auto 400px;
@@ -23,6 +24,79 @@
       transform: scale(.8);
     }
     
+    .topic {
+      width: 800px;
+      margin: 200px auto;
+      background-color: #fff;
+      opacity: 0;
+      -webkit-transform: scale(.8);
+      transform: scale(.8);
+    }
+    
+    #topic-list:after {
+      content: " ";
+      display: table;
+      clear: both;
+    }
+    
+    .topic__item {
+      margin-bottom: 20px;
+      width: 100%;
+      height: 120px;
+      display: block;
+      float: left;
+      position: relative;
+      background: rgb(247, 246, 244);
+    }
+    
+    .topic__item:hover {
+      cursor: pointer;
+    }
+    
+    .topic__info {
+      position: absolute;
+      left: 120px;
+      top: 10px;
+      width: 500px;
+    }
+    
+    .topic__time {
+      float: left;
+      color: #888;
+      font-size: 14px;
+    }
+    
+    .topic__image {
+      position: absolute;
+      left: 10px;
+      top: 10px;
+      width: 100px;
+      height: 100px;
+      background-size: cover;
+      background-position: center;
+    }
+    
+    .topic__desc {
+      position: absolute;
+      top: 50px;
+      left: 120px;
+      width: 600px;
+      max-height: 64px;
+      text-align: justify;
+      color: #555;
+      overflow: hidden;
+    }
+    
+    .topic__author {
+      float: left;
+    }
+    
+    .topic__comment {
+      float: left;
+      font-size: 14px;
+      color: #888;
+      margin-left: 15px;
+    }
   </style>
 </head>
 <body class="bg-darkGray">
@@ -41,23 +115,69 @@
   </li>
 </ul>
 <main style="opacity: 1;transform: scale(1);transition: 0.5s;" class="main padding20 block-shadow">
-  <h1 class="text-light">修改头像</h1>
+  <h1 class="text-light">我发布的话题</h1>
   <hr class="thin">
   <br>
-  <div id="change-avatar-main">
-    <form action="">
-      <div class="input-control file" data-role="input">
-        <label for="input-avatar">请上传一张图片作为头像</label>
-        <input id="input-avatar" type="file" accept="image/*" tabindex="-1" style="z-index: 0;">
-        <button class="button" type="button"><span class="mif-folder"></span></button>
-      </div>
-      <div class="form-actions">
-        <button id="btn-change-avatar" class="button primary" type="submit">确定修改</button>
-      </div>
-    </form>
+  <div id="topic-list">
+  
   </div>
 </main>
 <script>
+  
+  // 获取话题列表
+  (function (w, d) {
+    
+    var divTopicList = d.getElementById('topic-list');
+    var divTopicListJQ = $(divTopicList);
+    
+    var token = window.localStorage.getItem('token');
+    if (token) {
+      $.ajaxSetup({
+        headers: {
+          'x-access-token': token
+        }
+      });
+    }
+    $.ajax({
+      method: 'POST',
+      url: '/topics/myTopicList',
+      success: function (res) {
+        console.log(res);
+        var topicList = res.data;
+        var topicListHtml = '';
+        var topicItemHtml;
+        
+        for (var i = 0; i < topicList.length; ++i) {
+          topicItemHtml = '<div class="topic__item" data-url="' +
+              '/topics/' + topicList[i]._id +
+              '"><div class="topic__image" style="background-image:url(' + topicList[i].images[0] +
+              ');"></div><div class="topic__info"><span class="topic__time">' + '发布时间：' + formatTime(topicList[i].time) +
+              '</span><div class="topic__comment">评论：<span class="topic__comment-count">' + topicList[i].comment_count +
+              '</span></div></div><div class="topic__desc">' + topicList[i].text +
+              '</div></div>';
+          topicListHtml += topicItemHtml;
+        }
+        
+        divTopicListJQ.append(topicListHtml);
+        
+      },
+      error: function (res) {
+        console.log(res);
+      }
+    });
+    
+  })(window, document);
+  
+  function formatTime(time) {
+    var date = new Date(time);
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+    var hour = date.getHours();
+    var minute = date.getMinutes();
+    var minuteStr = minute < 10 ? '0' + minute : '' + minute;
+    return year + '/' + month + '/' + day + ' ' + hour + ':' + minuteStr;
+  }
 
 </script>
 </body>

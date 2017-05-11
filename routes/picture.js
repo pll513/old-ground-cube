@@ -210,4 +210,36 @@ router.post('/publish', [multipartMiddleware, jwtAuth], function (req, res, next
   
 });
 
+router.post('/myPictureList', jwtAuth, function (req, res, next) {
+  
+  var userId = req.decoded._id;
+  
+  MongoClient.connect(mongoUrl, function (err, db) {
+    if (err) return res.json({success: false, message: err});
+    db.collection('picture').find({author_id: userId}, {comments: 0}).toArray().then(function (pictureList) {
+      if (err) return res.json({success: false, message: err});
+  
+      res.json({success: true, data: pictureList});
+  
+    });
+    
+  });
+  
+});
+
+router.post('/userPictureList', jwtAuth, function (req, res, next) {
+  
+  MongoClient.connect(mongoUrl, function (err, db) {
+    if (err) return res.json({success: false, message: err});
+    db.collection('picture').find({author_id: req.body.user_id}).toArray().then(function (pictureList) {
+      if (err) return res.json({success: false, message: err});
+      
+      res.json({success: true, data: pictureList});
+      
+    });
+    
+  });
+  
+});
+
 module.exports = router;

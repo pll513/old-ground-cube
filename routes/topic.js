@@ -228,5 +228,29 @@ router.post('/uploadPictures', [jwtAuth, multipartMiddleware], function (req, re
 });
 
 
+router.post('/myTopicList', jwtAuth, function (req, res, next) {
+  
+  var userId = req.decoded._id;
+  
+  MongoClient.connect(mongoUrl, function (err, db) {
+    if (err) return res.json({success: false, message: err});
+    db.collection('topic').find({author_id: userId}).toArray().then(function (topicList) {
+      res.json({success: true, data: topicList});
+    });
+  });
+  
+});
+
+router.post('/userTopicList', function (req, res, next) {
+  
+  MongoClient.connect(mongoUrl, function (err, db) {
+    if (err) return res.json({success: false, message: err});
+    db.collection('topic').find({author_id: req.body.user_id}).toArray().then(function (topicList) {
+      res.json({success: true, data: topicList});
+    });
+  });
+  
+});
+
 module.exports = router;
 
