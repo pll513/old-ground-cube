@@ -13,7 +13,11 @@ var ObjectID = require('mongodb').ObjectID;
 
 // 根据user的ID获取用户信息
 router.get('/userInfo', jwtAuth, function (req, res, next) {
-  
+  MongoClient.connect(mongoUrl, function (err, db) {
+    db.collection('user').findOne({_id: ObjectID(req.body.user_id ,{password: 0})}, function (err, user) {
+      res.json({success: true, data: user});
+    });
+  });
 });
 
 // 用户修改密码
@@ -100,7 +104,7 @@ router.post('/basicInfo', function (req, res, next) {
   });
 });
 
-router.get('/user/:userId', function (req, res, next) {
+router.get('/:userId', function (req, res, next) {
   console.log('用户');
   res.render('user');
 });

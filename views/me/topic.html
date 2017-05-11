@@ -40,6 +40,7 @@
     }
     
     .topic__item {
+      position: relative;
       margin-bottom: 20px;
       width: 100%;
       height: 120px;
@@ -97,6 +98,16 @@
       color: #888;
       margin-left: 15px;
     }
+    
+    .button-group {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+    }
+    
+    .f-none {
+      display: none;
+    }
   </style>
 </head>
 <body class="bg-darkGray">
@@ -146,15 +157,19 @@
         var topicList = res.data;
         var topicListHtml = '';
         var topicItemHtml;
+        var warningClass;
         
         for (var i = 0; i < topicList.length; ++i) {
+          warningClass = topicList[i].status <= 0 ? 'f-none' : '';
           topicItemHtml = '<div class="topic__item" data-url="' +
-              '/topics/' + topicList[i]._id +
-              '"><div class="topic__image" style="background-image:url(' + topicList[i].images[0] +
-              ');"></div><div class="topic__info"><span class="topic__time">' + '发布时间：' + formatTime(topicList[i].time) +
-              '</span><div class="topic__comment">评论：<span class="topic__comment-count">' + topicList[i].comment_count +
-              '</span></div></div><div class="topic__desc">' + topicList[i].text +
-              '</div></div>';
+          '/topics/' + topicList[i]._id + ' data-topic_id=' + topicList[i]._id +
+          '"><div class="topic__image" style="background-image:url(' + topicList[i].images[0] +
+          ');"></div><div class="topic__info"><span class="topic__time">' + '发布时间：' + formatTime(topicList[i].time) +
+          '</span><div class="topic__comment">评论：<span class="topic__comment-count">' + topicList[i].comment_count +
+          '</span></div></div><div class="topic__desc">' + topicList[i].text +
+          '</div><div class="button-group f-none"><button data-topic_id="' + topicList[i]._id + '" class="enter-topic button primary">进入话题</button>' +
+          '<button data-topic_id="' + topicList[i]._id + '" class="end-topic button warning ' + warningClass + '">终止话题</button>' +
+          '<button data-topic_id="' + topicList[i]._id + '" class="delete-topic button danger">删除话题</button></div></div>';
           topicListHtml += topicItemHtml;
         }
         
@@ -165,6 +180,90 @@
         console.log(res);
       }
     });
+    
+    divTopicList.addEventListener('click', function (event) {
+      event.preventDefault();
+      var target = event.target;
+      if (~target.className.indexOf('topic__item') || ~target.className.indexOf('topic__info') || ~target.className.indexOf('topic__desc') || ~target.className.indexOf('topic__image')) {
+        console.log('hahah');
+//        $('#button-group').remove();
+//        var buttonGroupHtml = '<div id="button-group"><button id="enter-topic" class="button primary">进入话题</button>' +
+//            '<button id="end-topic" class="button warning">终止话题</button>' +
+//            '<button id="delete-topic" class="button danger">删除话题</button></div>';
+//        $(target).append(buttonGroupHtml);
+        $('.button-group', $(target).closest('.topic__item')).toggleClass('f-none');
+      }
+    });
+    
+    d.addEventListener('click', function (event) {
+      var target = event.target;
+      if (~target.className.indexOf('enter-topic')) {
+        console.log('hahah');
+        window.location.href = window.location.origin + '/topics/' + target.getAttribute('data-topic_id');
+        
+      } else if (~target.className.indexOf('end-topic')) {
+        
+        $.ajax({
+          method: 'POST',
+          url: '/topics/stop',
+          data: {
+            topic_id: target.getAttribute('data-topic_id')
+          },
+          success: function (res) {
+            console.log(res);
+            if (res.success) {
+              $.Notify({
+                caption: '操作成功',
+                content: '已终止话题',
+                type: 'success'
+              });
+            }
+            setTimeout(function () {
+              window.location.href = window.location.origin + '/me/topics';
+            }, 2000);
+          },
+          error: function (res) {
+            console.log(res);
+            $.Notify({
+              caption: '操作失败',
+              content: res.message,
+              type: 'warning'
+            });
+          }
+        });
+        
+      } else if (~target.className.indexOf('delete-topic')) {
+        
+        $.ajax({
+          method: 'POST',
+          url: '/topics/delete',
+          data: {
+            topic_id: target.getAttribute('data-topic_id')
+          },
+          success: function (res) {
+            console.log(res);
+            if (res.success) {
+              $.Notify({
+                caption: '操作成功',
+                content: '已删除话题',
+                type: 'success'
+              });
+            }
+            setTimeout(function () {
+              window.location.href = window.location.origin + '/me/topics';
+            }, 2000);
+          },
+          error: function (res) {
+            console.log(res);
+            $.Notify({
+              caption: '操作失败',
+              content: res.message,
+              type: 'warning'
+            });
+          }
+        });
+      }
+    })
     
   })(window, document);
   

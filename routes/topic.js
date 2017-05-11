@@ -198,7 +198,7 @@ router.post('/delete', jwtAuth, function (req, res, next) {
     db.collection('topic').updateOne({_id: ObjectID(topicId)}, {$set: {status: -1}}, function (err, result) {
       assert.equal(null, err);
       db.close();
-      res.json({success: true, message: '话题删除成功'});
+      res.json({success: true, message: '已删除话题'});
     });
   });
 });
@@ -234,7 +234,7 @@ router.post('/myTopicList', jwtAuth, function (req, res, next) {
   
   MongoClient.connect(mongoUrl, function (err, db) {
     if (err) return res.json({success: false, message: err});
-    db.collection('topic').find({author_id: userId}).toArray().then(function (topicList) {
+    db.collection('topic').find({author_id: userId, status: {$gte: 0}}).toArray().then(function (topicList) {
       res.json({success: true, data: topicList});
     });
   });

@@ -80,15 +80,14 @@
     }
     
     #picture-preview {
-      height: 250px;
-      width: 400px;
+      height: 300px;
       position: relative;
     }
     
     #canvas-picture-preview {
       position: absolute;
       left: 0;
-      top: 0;
+      top: 50px;
     }
     
     #slider-group {
@@ -133,6 +132,7 @@
     <button id="button-lock-album" class="button info"><span class="mif-lock icon"></span> 设为私有</button>
     <button id="button-new-page" class="button success"><span class="mif-plus icon"></span> 添加图片</button>
     <button id="button-edit-desc" class="button success"><span class="mif-plus icon"></span> 添加相册介绍</button>
+    <button id="button-delete-album" class="button danger"><span class="mif-bin icon"></span> 删除相册</button>
   </div>
   
   <div id="form-new-page" class="f-none">
@@ -159,26 +159,14 @@
         <div>亮度</div>
         <div id="brightness" class="slider" data-role="slider" data-show-hint="true"
              data-position="50" data-min-value="-100" data-max-value="100">
-          <div class="slider-backside"></div>
-          <div class="complete" style="width: 66px;"></div>
-          <div class="buffer" style="width: 0%;"></div>
-          <a class="marker" style="left: 66px;"></a><span class="slider-hint" style="left: 57px;">0</span>
         </div>
         <div>对比度</div>
         <div id="contrast" class="slider" data-role="slider" data-show-hint="true"
              data-position="50" data-min-value="-100" data-max-value="100">
-          <div class="slider-backside"></div>
-          <div class="complete" style="width: 66px;"></div>
-          <div class="buffer" style="width: 0%;"></div>
-          <a class="marker" style="left: 66px;"></a><span class="slider-hint" style="left: 57px;">0</span>
         </div>
         <div>饱和度</div>
         <div id="saturation" class="slider" data-role="slider" data-show-hint="true"
              data-position="50" data-min-value="-100" data-max-value="100">
-          <div class="slider-backside"></div>
-          <div class="complete" style="width: 66px;"></div>
-          <div class="buffer" style="width: 0%;"></div>
-          <a class="marker" style="left: 66px;"></a><span class="slider-hint" style="left: 57px;">0</span>
         </div>
       
       </div>
@@ -215,6 +203,7 @@
       <button class="button primary" id="button-prev"><span class="icon mif-arrow-left"></span> 上一张</button>
       <button class="button primary" id="button-next"><span class="icon mif-arrow-right"></span> 下一张</button>
       <button class="button success" id="button-edit-page"><span class="icon mif-pencil"></span> 保存修改</button>
+      <button id="button-delete-page" class="button danger"><span class="icon mif-bin"></span> 删除这一页</button>
     </div>
     <div id="edit-slider-group"></div>
   </div>
@@ -432,7 +421,7 @@
           if (res.success) {
             var imgUrl = res.data.img_url;
             picturePreviewJQ.empty();
-            var pictureHtml = '<h3 class="text-light">图片预览</h3><hr class="thin"><br><canvas id="canvas-picture-preview" style="width: 400px"></canvas>';
+            var pictureHtml = '<h3 class="text-light">图片预览</h3><hr class="thin"><br><canvas id="canvas-picture-preview" style="height: 200px"></canvas>';
             picturePreviewJQ.html(pictureHtml);
             global.imgUrl = imgUrl;
             
@@ -459,23 +448,25 @@
     var brightness;
     var contrast;
     var saturation;
-    var brightnessHintJQ = $('.slider-hint', '#brightness');
-    var contrastHintJQ = $('.slider-hint', '#contrast');
-    var saturationHintJQ = $('.slider-hint', '#saturation');
+//    var contrastHintJQ = $('.slider-hint', d.getElementById('#contrast'));
+//    var saturationHintJQ = $('.slider-hint', d.getElementById('#saturation'));
     var picturePreviewJQ = $('#picture-preview');
-    var pageAreaDetailJQ = $('#page-area-detail');
     
     setInterval(function () {
       var canvasPicturePreview = d.getElementById('canvas-picture-preview');
       if (canvasPicturePreview) {
-        brightness = parseInt(brightnessHintJQ.html());
-        contrast = parseInt(contrastHintJQ.html());
-        saturation = parseInt(saturationHintJQ.html());
-        
+        brightness = parseInt($('#brightness .slider-hint').html());
+        contrast = parseInt($('#contrast .slider-hint').html());
+        saturation = parseInt($('#saturation .slider-hint').html());
+//        console.log(brightness);
+//        console.log(contrast);
+//        console.log(contrast);
+  
+  
         if (currentBrightness !== brightness || currentContrast !== contrast || currentSaturation !== saturation) {
           console.log(global.imgUrl);
           $(canvasPicturePreview).remove();
-          picturePreviewJQ.append('<canvas id="canvas-picture-preview" style="width: 400px"></canvas>');
+          picturePreviewJQ.append('<canvas id="canvas-picture-preview" style="height: 200px;"></canvas>');
           Caman('#canvas-picture-preview', global.imgUrl, function () {
             this.brightness(brightness);
             this.contrast(contrast);
